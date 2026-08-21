@@ -310,6 +310,44 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
   50% { opacity: 0.3; }
 }
 
+/* ===== Indicador cloud sync ===== */
+.admin-cloud-sync {
+  position: fixed;
+  top: 68px;
+  right: 160px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(33, 150, 243, 0.92);
+  color: #fff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 20px;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(33, 150, 243, 0.35);
+}
+.admin-cloud-sync.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.admin-cloud-sync.is-ok {
+  background: rgba(37, 211, 102, 0.92);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+.admin-cloud-sync.is-error {
+  background: rgba(255, 152, 0, 0.92);
+  box-shadow: 0 4px 14px rgba(255, 152, 0, 0.35);
+}
+.admin-cloud-icon {
+  font-size: 0.9rem;
+}
+
 /* ===== Botón exportar ===== */
 .admin-btn-export {
   background: linear-gradient(135deg, #ff9800, #e65100) !important;

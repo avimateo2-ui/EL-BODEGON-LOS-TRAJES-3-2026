@@ -10,6 +10,9 @@
   var DEFAULT_USERNAME = 'Ana Avila';
   var SESSION_KEY = 'bodegon_admin_session';
   var AUTOSAVE_KEY = 'bodegon_autosave';
+  var CLOUD_SYNC_API = '/api/save-content';
+  var cloudSyncTimer = null;
+  var CLOUD_SYNC_DELAY = 2500;
 
   var content = {
     version: 1,
@@ -1008,6 +1011,7 @@
       var data = serialize();
       localStorage.setItem(AUTOSAVE_KEY, data);
       showSaveIndicator();
+      scheduleCloudSync();
     } catch (e) {
       toast('⚠️ No se pudo guardar. El almacenamiento está lleno. Intenta con fotos más pequeñas.');
     }
@@ -1026,6 +1030,50 @@
     ind._timer = setTimeout(function () {
       ind.classList.remove('is-visible');
     }, 2000);
+  }
+
+  function scheduleCloudSync() {
+    clearTimeout(cloudSyncTimer);
+    cloudSyncTimer = setTimeout(syncToCloud, CLOUD_SYNC_DELAY);
+  }
+
+  function syncToCloud() {
+    var syncBadge = document.querySelector('.admin-cloud-sync');
+    if (!syncBadge) {
+      syncBadge = document.createElement('div');
+      syncBadge.className = 'admin-ui admin-cloud-sync';
+      syncBadge.innerHTML = '<span class="admin-cloud-icon">☁</span> Sincronizando...';
+      document.body.appendChild(syncBadge);
+    }
+    syncBadge.classList.add('is-visible');
+    syncBadge.classList.remove('is-error', 'is-ok');
+
+    var data = serialize();
+
+    fetch(CLOUD_SYNC_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        content: data,
+        message: 'Admin update: contenido actualizado desde el panel'
+      })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (res) {
+        if (res.ok) {
+          syncBadge.innerHTML = '<span class="admin-cloud-icon">✓</span> Sincronizado con GitHub';
+          syncBadge.classList.add('is-ok');
+          setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-ok'); }, 3000);
+        } else {
+          throw new Error(res.error || 'Error desconocido');
+        }
+      })
+      .catch(function (err) {
+        syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Sin conexión — guardado local';
+        syncBadge.classList.add('is-error');
+        setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 4000);
+        console.warn('[cloud-sync]', err.message || err);
+      });
   }
 
   function loadAutoSave() {
