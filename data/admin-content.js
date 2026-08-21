@@ -1,1 +1,1 @@
-window.ADMIN_CONTENT = {"version":1,"texts":[],"images":[],"addCards":[],"addTexts":[],"deleteCards":[],"deleteTexts":[],"seasonCovers":{}};
+window.ADMIN_CONTENT = {"version":1,"texts":[{"sel":"#enero-nosotros p","html":"Texto de prueba desde sync"}],"images":[],"addCards":[],"addTexts":[],"deleteCards":[],"deleteTexts":[],"seasonCovers":{}};
