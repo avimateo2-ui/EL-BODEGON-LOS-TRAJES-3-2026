@@ -4,15 +4,14 @@
    Cuando el admin guarda, este endpoint:
    1. Recibe el contenido serializado
    2. Lo commit en el repositorio vía GitHub API
-   3. Vercel redespliega automáticamente
-   
+   3. Otros dispositivos lo cargan desde GitHub raw
+
    REQUISITOS (configurar en Vercel → Settings → Environment Variables):
    - GITHUB_TOKEN: Personal Access Token con permiso 'repo'
    - GITHUB_REPO: avimateo2-ui/EL-BODEGON-LOS-TRAJES-3-2026
    ========================================================== */
 
 module.exports = async (req, res) => {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -42,7 +41,32 @@ module.exports = async (req, res) => {
       return res.status(400).json({ error: 'Falta el campo content.' });
     }
 
-    // Obtener el SHA actual del archivo (necesario para actualizar)
+    let parsed;
+    try {
+      parsed = JSON.parse(content);
+    } catch (e) {
+      return res.status(400).json({ error: 'Content no es JSON válido.' });
+    }
+
+    const hasRealChanges =
+      (parsed.texts && parsed.texts.length > 0) ||
+      (parsed.images && parsed.images.length > 0) ||
+      (parsed.addCards && parsed.addCards.length > 0) ||
+      (parsed.addTexts && parsed.addTexts.length > 0) ||
+      (parsed.deleteCards && parsed.deleteCards.length > 0) ||
+      (parsed.deleteTexts && parsed.deleteTexts.length > 0) ||
+      (parsed.seasonCovers && Object.keys(parsed.seasonCovers).length > 0) ||
+      parsed.passwordHash ||
+      parsed.usernameHash;
+
+    if (!hasRealChanges) {
+      return res.status(200).json({
+        ok: true,
+        message: 'Sin cambios reales, no se actualiza GitHub.',
+        skipped: true
+      });
+    }
+
     const getFileUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${FILE_PATH}`;
     const getRes = await fetch(getFileUrl, {
       headers: {
@@ -55,13 +79,35 @@ module.exports = async (req, res) => {
     if (getRes.ok) {
       const fileData = await getRes.json();
       sha = fileData.sha;
+
+      if (sha) {
+        const rawRes = await fetch(`https://raw.githubusercontent.com/${GITHUB_REPO}/main/${FILE_PATH}?t=${Date.now()}`);
+        if (rawRes.ok) {
+          const rawText = await rawRes.text();
+          const rawMatch = rawText.match(/window\.ADMIN_CONTENT\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
+          if (rawMatch) {
+            try {
+              const currentRemote = JSON.parse(rawMatch[1]);
+              const remoteHasChanges =
+                (currentRemote.texts && currentRemote.texts.length > 0) ||
+                (currentRemote.images && currentRemote.images.length > 0) ||
+                (currentRemote.addCards && currentRemote.addCards.length > 0) ||
+                (currentRemote.addTexts && currentRemote.addTexts.length > 0) ||
+                (currentRemote.seasonCovers && Object.keys(currentRemote.seasonCovers).length > 0) ||
+                currentRemote.passwordHash;
+
+              if (remoteHasChanges && !hasRealChanges) {
+                return res.status(200).json({ ok: true, message: 'Remoto tiene contenido real, no se sobreescribe.', skipped: true });
+              }
+            } catch (e) {}
+          }
+        }
+      }
     }
 
-    // Preparar el contenido del archivo
     const fileContent = 'window.ADMIN_CONTENT = ' + content + ';';
     const encoded = Buffer.from(fileContent).toString('base64');
 
-    // Crear o actualizar el archivo
     const body = {
       message: message || `Admin update: ${new Date().toISOString()}`,
       content: encoded,
@@ -72,7 +118,7 @@ module.exports = async (req, res) => {
     };
 
     if (sha) {
-      body.sha = sha; // Actualizar archivo existente
+      body.sha = sha;
     }
 
     const putRes = await fetch(getFileUrl, {
@@ -96,7 +142,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({
       ok: true,
-      message: 'Contenido guardado en GitHub. Vercel redesplegará automáticamente.',
+      message: 'Contenido guardado en GitHub. Los dispositivos lo cargarán automáticamente.',
       commit: result.commit ? result.commit.sha.substring(0, 7) : null,
       url: result.commit ? result.commit.html_url : null
     });

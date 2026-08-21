@@ -1328,6 +1328,23 @@
 
   /* ---------- iniciar ---------- */
 
+  var GITHUB_REPO = 'avimateo2-ui/EL-BODEGON-LOS-TRAJES-3-2026';
+  var GITHUB_RAW = 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/main/data/admin-content.js';
+
+  function fetchFromGitHub(callback) {
+    var bust = '?t=' + Date.now();
+    fetch(GITHUB_RAW + bust)
+      .then(function (res) {
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+      })
+      .then(function (text) {
+        var obj = parseWrapped(text);
+        if (obj && obj.version) callback(obj);
+      })
+      .catch(function () {});
+  }
+
   function init() {
     var base = null;
     if (window.ADMIN_CONTENT) {
@@ -1344,6 +1361,20 @@
     if (base) {
       try { applyData(base); } catch (e) {}
     }
+
+    fetchFromGitHub(function (remoteData) {
+      var remoteBase = null;
+      if (base) {
+        try { remoteBase = mergeData(base, remoteData); } catch (e) { remoteBase = remoteData; }
+      } else {
+        remoteBase = remoteData;
+      }
+      if (remoteBase) {
+        try { applyData(remoteBase); } catch (e) {}
+      }
+      try { localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(remoteBase)); } catch (e) {}
+    });
+
     buildFab();
     reCompressOld();
 
