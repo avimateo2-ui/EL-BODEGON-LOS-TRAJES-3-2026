@@ -1,11 +1,1 @@
-window.ADMIN_CONTENT = {
-  "version": 1,
-  "usernameHash": null,
-  "passwordHash": null,
-  "texts": [],
-  "images": [],
-  "addCards": [],
-  "addTexts": [],
-  "deleteCards": [],
-  "deleteTexts": []
-};
+window.ADMIN_CONTENT = {"version":1,"texts":[],"images":[],"addCards":[],"addTexts":[],"deleteCards":[],"deleteTexts":[],"seasonCovers":{}};
