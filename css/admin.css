@@ -270,6 +270,67 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
   box-shadow: 0 10px 26px rgba(0,0,0,.45);
 }
 body.admin-edit-mode .admin-save-fab { display: flex !important; }
+
+/* ===== Indicador de guardado ===== */
+.admin-save-indicator {
+  position: fixed;
+  top: 68px;
+  right: 20px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  background: rgba(37, 211, 102, 0.92);
+  color: #fff;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border-radius: 20px;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+.admin-save-indicator.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.admin-save-dot {
+  width: 7px;
+  height: 7px;
+  background: #fff;
+  border-radius: 50%;
+  display: inline-block;
+  animation: save-pulse 1s ease infinite;
+}
+@keyframes save-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ===== Botón exportar ===== */
+.admin-btn-export {
+  background: linear-gradient(135deg, #ff9800, #e65100) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+}
+.admin-btn-export:hover {
+  background: linear-gradient(135deg, #ffa726, #ff6d00) !important;
+}
+
+@media (max-width: 768px) {
+  .admin-save-indicator {
+    top: auto;
+    bottom: 80px;
+    right: 12px;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+}
+
 @keyframes whatsapp-pulse {
   0% { transform: scale(0.9); opacity: 1; }
   70% { transform: scale(1.25); opacity: 0; }

@@ -890,6 +890,7 @@
     tb.innerHTML =
       '<span class="admin-toolbar-title">Modo administrador</span>' +
       '<button type="button" class="admin-btn admin-btn-primary" data-role="save">Guardar</button>' +
+      '<button type="button" class="admin-btn admin-btn-export" data-role="export">Descargar cambios</button>' +
       '<button type="button" class="admin-btn" data-role="password">Cambiar contraseña</button>';
     document.body.appendChild(tb);
 
@@ -904,6 +905,9 @@
     saveBtn.addEventListener('click', function () {
       autoSave();
       toast('Guardado en el navegador.');
+    });
+    tb.querySelector('[data-role="export"]').addEventListener('click', function () {
+      saveToDisk();
     });
     tb.querySelector('[data-role="password"]').addEventListener('click', changePassword);
   }
@@ -1003,9 +1007,25 @@
     try {
       var data = serialize();
       localStorage.setItem(AUTOSAVE_KEY, data);
+      showSaveIndicator();
     } catch (e) {
       toast('⚠️ No se pudo guardar. El almacenamiento está lleno. Intenta con fotos más pequeñas.');
     }
+  }
+
+  function showSaveIndicator() {
+    var ind = document.querySelector('.admin-save-indicator');
+    if (!ind) {
+      ind = document.createElement('div');
+      ind.className = 'admin-ui admin-save-indicator';
+      ind.innerHTML = '<span class="admin-save-dot"></span> Guardado';
+      document.body.appendChild(ind);
+    }
+    ind.classList.add('is-visible');
+    clearTimeout(ind._timer);
+    ind._timer = setTimeout(function () {
+      ind.classList.remove('is-visible');
+    }, 2000);
   }
 
   function loadAutoSave() {
