@@ -13,6 +13,8 @@
   var CLOUD_SYNC_API = '/api/save-content';
   var cloudSyncTimer = null;
   var CLOUD_SYNC_DELAY = 2500;
+  var cloudSyncRetries = 0;
+  var MAX_RETRIES = 3;
 
   var content = {
     version: 1,
@@ -893,7 +895,9 @@
     tb.innerHTML =
       '<span class="admin-toolbar-title">Modo administrador</span>' +
       '<button type="button" class="admin-btn admin-btn-primary" data-role="save">Guardar</button>' +
+      '<button type="button" class="admin-btn admin-btn-sync" data-role="sync">Sincronizar ahora</button>' +
       '<button type="button" class="admin-btn admin-btn-export" data-role="export">Descargar cambios</button>' +
+      '<button type="button" class="admin-btn" data-role="verify">Verificar</button>' +
       '<button type="button" class="admin-btn" data-role="password">Cambiar contraseña</button>';
     document.body.appendChild(tb);
 
@@ -909,9 +913,11 @@
       autoSave();
       toast('Guardado en el navegador.');
     });
+    tb.querySelector('[data-role="sync"]').addEventListener('click', forceSyncNow);
     tb.querySelector('[data-role="export"]').addEventListener('click', function () {
       saveToDisk();
     });
+    tb.querySelector('[data-role="verify"]').addEventListener('click', testCloudConnection);
     tb.querySelector('[data-role="password"]').addEventListener('click', changePassword);
   }
 
@@ -1058,22 +1064,79 @@
         message: 'Admin update: contenido actualizado desde el panel'
       })
     })
-      .then(function (res) { return res.json(); })
-      .then(function (res) {
-        if (res.ok) {
+      .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, json: j }; }); })
+      .then(function (r) {
+        if (r.ok && r.json.ok) {
           syncBadge.innerHTML = '<span class="admin-cloud-icon">✓</span> Sincronizado con GitHub';
           syncBadge.classList.add('is-ok');
+          cloudSyncRetries = 0;
           setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-ok'); }, 3000);
         } else {
-          throw new Error(res.error || 'Error desconocido');
+          throw new Error(r.json.error || 'Error del servidor');
         }
       })
       .catch(function (err) {
-        syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Sin conexión — guardado local';
-        syncBadge.classList.add('is-error');
-        setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 4000);
-        console.warn('[cloud-sync]', err.message || err);
+        cloudSyncRetries++;
+        var errMsg = err.message || String(err);
+
+        if (errMsg.indexOf('GITHUB_TOKEN') !== -1 || errMsg.indexOf('no está configurado') !== -1) {
+          syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Token de GitHub no configurado';
+          syncBadge.classList.add('is-error');
+          syncBadge.title = 'Ve a Vercel → Settings → Environment Variables y crea GITHUB_TOKEN';
+          setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 6000);
+          return;
+        }
+
+        if (cloudSyncRetries < MAX_RETRIES) {
+          syncBadge.innerHTML = '<span class="admin-cloud-icon">⟳</span> Reintentando... (' + cloudSyncRetries + '/' + MAX_RETRIES + ')';
+          setTimeout(syncToCloud, 3000);
+        } else {
+          syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Sin conexión — guardado local';
+          syncBadge.classList.add('is-error');
+          cloudSyncRetries = 0;
+          setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 5000);
+        }
+        console.warn('[cloud-sync]', errMsg);
       });
+  }
+
+  function forceSyncNow() {
+    cloudSyncRetries = 0;
+    clearTimeout(cloudSyncTimer);
+    autoSave();
+    toast('Sincronizando con GitHub...');
+  }
+
+  function testCloudConnection() {
+    var syncBadge = document.querySelector('.admin-cloud-sync');
+    if (!syncBadge) {
+      syncBadge = document.createElement('div');
+      syncBadge.className = 'admin-ui admin-cloud-sync';
+      document.body.appendChild(syncBadge);
+    }
+    syncBadge.innerHTML = '<span class="admin-cloud-icon">⟳</span> Verificando conexión...';
+    syncBadge.classList.add('is-visible');
+    syncBadge.classList.remove('is-error', 'is-ok');
+
+    fetch(CLOUD_SYNC_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: '{}', message: 'Test connection' })
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (r) {
+        if (r.ok) {
+          syncBadge.innerHTML = '<span class="admin-cloud-icon">✓</span> Conexión OK — GitHub sync activo';
+          syncBadge.classList.add('is-ok');
+        } else {
+          throw new Error(r.error);
+        }
+      })
+      .catch(function (err) {
+        syncBadge.innerHTML = '<span class="admin-cloud-icon">✗</span> Error: ' + (err.message || 'desconocido');
+        syncBadge.classList.add('is-error');
+      });
+    setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-ok', 'is-error'); }, 5000);
   }
 
   function loadAutoSave() {

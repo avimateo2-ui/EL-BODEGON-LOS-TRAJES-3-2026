@@ -359,10 +359,28 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
   background: linear-gradient(135deg, #ffa726, #ff6d00) !important;
 }
 
+/* ===== Botón sincronizar ===== */
+.admin-btn-sync {
+  background: linear-gradient(135deg, #2196f3, #1565c0) !important;
+  color: #fff !important;
+  border: none !important;
+  font-weight: 600;
+}
+.admin-btn-sync:hover {
+  background: linear-gradient(135deg, #42a5f5, #1e88e5) !important;
+}
+
 @media (max-width: 768px) {
   .admin-save-indicator {
     top: auto;
     bottom: 80px;
+    right: 12px;
+    font-size: 0.75rem;
+    padding: 6px 12px;
+  }
+  .admin-cloud-sync {
+    top: auto;
+    bottom: 110px;
     right: 12px;
     font-size: 0.75rem;
     padding: 6px 12px;
