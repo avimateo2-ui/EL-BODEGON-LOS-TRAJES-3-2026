@@ -330,6 +330,7 @@ section {
 
   /* FABs: stack vertical */
   .whatsapp-float { width: 3rem; height: 3rem; left: 1rem; bottom: 1rem; }
+  .contact-float { width: 3rem; height: 3rem; left: 1rem; bottom: 4.5rem; }
   .admin-fab { left: 1rem; bottom: 5rem; }
   .admin-save-fab { width: 3rem; height: 3rem; left: 4.5rem; bottom: 1rem; }
   .admin-logout-fab { left: 4.5rem; bottom: 5rem; }
@@ -416,6 +417,7 @@ section {
 
   /* FABs más compactos en ≤420px */
   .whatsapp-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 0.8rem; font-size: 1.2rem; }
+  .contact-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 3.8rem; font-size: 1rem; }
   .admin-fab { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 4.2rem; font-size: 1.1rem; }
   .admin-save-fab { width: 2.6rem; height: 2.6rem; left: 4rem; bottom: 0.8rem; font-size: 1rem; }
   .admin-logout-fab { width: 2.4rem; height: 2.4rem; left: 4rem; bottom: 4.2rem; }
