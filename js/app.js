@@ -295,4 +295,22 @@
         });
       }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
       revealTargets.forEach((el) => revealObserver.observe(el));
+    }
+
+    // vCard: descargar contacto con nombre ELBODEGONDELOSTRAJES
+    var contactLink = document.getElementById('download-contact');
+    if (contactLink) {
+      var vCard = [
+        'BEGIN:VCARD',
+        'VERSION:3.0',
+        'FN:ELBODEGONDELOSTRAJES',
+        'N:ELBODEGONDELOSTRAJES;;;;',
+        'ORG:El Bodegón de los Trajes',
+        'TEL;TYPE=CELL:+573107706615',
+        'ADR;TYPE=WORK:;;Tunja;Boyacá;;;;Colombia',
+        'URL:https://el-bodegon-los-trajes-3-2026.vercel.app',
+        'END:VCARD'
+      ].join('\r\n');
+      var blob = new Blob([vCard], { type: 'text/vcard;charset=utf-8' });
+      contactLink.href = URL.createObjectURL(blob);
     }
