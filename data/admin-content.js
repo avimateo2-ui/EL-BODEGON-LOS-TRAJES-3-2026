@@ -10,6 +10,10 @@ window.ADMIN_CONTENT = {
     {
       "sel": "#temporadas > div:nth-child(2) > button:nth-child(8) > span:nth-child(1)",
       "html": "Celebraciones de Gala y bailes de clausura "
+    },
+    {
+      "sel": "#temporadas > div:nth-child(2) > button:nth-child(11) > span:nth-child(1)",
+      "html": "Bailes clauras y grados "
     }
   ],
   "images": [],
