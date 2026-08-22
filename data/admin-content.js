@@ -18,6 +18,10 @@ window.ADMIN_CONTENT = {
     {
       "sel": "#temporadas > div:nth-child(2) > button:nth-child(1) > span:nth-child(1)",
       "html": "Reyes magos y. Regreso a clases "
+    },
+    {
+      "sel": "#temporadas > div:nth-child(2) > button:nth-child(12) > span:nth-child(1)",
+      "html": "Navidad &amp; Fin de Año"
     }
   ],
   "images": [],
