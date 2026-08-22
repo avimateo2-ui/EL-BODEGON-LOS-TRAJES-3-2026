@@ -6,6 +6,10 @@ window.ADMIN_CONTENT = {
     {
       "sel": "#enero-nosotros p",
       "html": "Texto de prueba desde sync"
+    },
+    {
+      "sel": "#temporadas > div:nth-child(2) > button:nth-child(8) > span:nth-child(1)",
+      "html": "Celebraciones de Gala y bailes de clausura "
     }
   ],
   "images": [],
