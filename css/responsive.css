@@ -40,7 +40,7 @@
   background: transparent;
   border: none;
   font-family: 'Quicksand', sans-serif;
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 2.5px;
@@ -50,11 +50,12 @@
   align-items: center;
   gap: 6px;
   transition: var(--transition-haunted);
+  font-weight: 600;
 }
 
 .has-dropdown > .dropdown-toggle:hover,
 .has-dropdown.is-open > .dropdown-toggle {
-  color: var(--halloween-primary);
+  color: var(--halloween-vivid);
   text-shadow: 0 0 15px var(--halloween-primary);
 }
 
@@ -115,11 +116,13 @@
   letter-spacing: 2px;
   white-space: nowrap;
   transition: var(--transition-premium);
+  color: var(--ghostly-white);
+  font-weight: 500;
 }
 
 .dropdown a:hover {
   background: var(--glass-bg);
-  color: var(--halloween-primary);
+  color: var(--halloween-vivid);
   transform: none;
 }
 
@@ -128,7 +131,7 @@
 }
 
 .nav-menu a.is-active {
-  color: var(--halloween-primary);
+  color: var(--halloween-vivid);
   text-shadow: 0 0 15px var(--halloween-primary);
 }
 
@@ -244,6 +247,10 @@ section {
   overflow-x: clip;
 }
 
+@media (min-width: 1025px) {
+  section { padding: 10rem 10%; }
+}
+
 /* ===== TABLET (<= 1024px) ===== */
 @media (max-width: 1024px) {
   header { padding: 1rem 4%; }
@@ -330,7 +337,8 @@ section {
 
   /* FABs: stack vertical */
   .whatsapp-float { width: 3rem; height: 3rem; left: 1rem; bottom: 1rem; }
-  .contact-float { width: 3rem; height: 3rem; left: 1rem; bottom: 4.5rem; }
+  .edit-float { width: 3rem; height: 3rem; left: 1rem; bottom: 4.5rem; }
+  .contact-float { width: 3rem; height: 3rem; left: 1rem; bottom: 8rem; }
   .admin-fab { left: 1rem; bottom: 5rem; }
   .admin-save-fab { width: 3rem; height: 3rem; left: 4.5rem; bottom: 1rem; }
   .admin-logout-fab { left: 4.5rem; bottom: 5rem; }
@@ -417,7 +425,8 @@ section {
 
   /* FABs más compactos en ≤420px */
   .whatsapp-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 0.8rem; font-size: 1.2rem; }
-  .contact-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 3.8rem; font-size: 1rem; }
+  .edit-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 3.8rem; font-size: 1rem; }
+  .contact-float { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 6.8rem; font-size: 1rem; }
   .admin-fab { width: 2.6rem; height: 2.6rem; left: 0.8rem; bottom: 4.2rem; font-size: 1.1rem; }
   .admin-save-fab { width: 2.6rem; height: 2.6rem; left: 4rem; bottom: 0.8rem; font-size: 1rem; }
   .admin-logout-fab { width: 2.4rem; height: 2.4rem; left: 4rem; bottom: 4.2rem; }
@@ -439,7 +448,7 @@ section {
 
 /* Selección de texto */
 ::selection {
-  background: var(--halloween-primary);
+  background: var(--halloween-vivid);
   color: #0a0a0a;
 }
 
@@ -501,7 +510,7 @@ textarea:focus-visible,
   font-family: 'Cinzel Decorative', cursive;
   font-size: 1rem;
   letter-spacing: 3px;
-  color: var(--halloween-primary);
+  color: var(--halloween-vivid);
   margin-bottom: 1.4rem;
 }
 
@@ -514,24 +523,26 @@ textarea:focus-visible,
 }
 
 .footer-col ul li {
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 0.92rem;
   letter-spacing: 1px;
   line-height: 1.7;
+  font-weight: 500;
 }
 
 .footer-col a {
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   text-decoration: none;
   letter-spacing: 1.5px;
   font-size: 0.85rem;
   text-transform: uppercase;
   transition: color 0.3s ease, text-shadow 0.3s ease;
+  font-weight: 500;
 }
 
 .footer-col a:hover {
-  color: var(--halloween-primary);
-  text-shadow: 0 0 12px rgba(255, 140, 0, 0.4);
+  color: var(--halloween-vivid);
+  text-shadow: 0 0 12px rgba(255, 179, 71, 0.4);
 }
 
 .footer-brand .footer-logo-wrapper {
@@ -582,6 +593,80 @@ textarea:focus-visible,
 
   .footer-brand p {
     margin: 0 auto;
+  }
+}
+
+/* ===== ENERO - RESPONSIVE ===== */
+@media (max-width: 900px) {
+  #temporadas[data-season="enero"] .enero-hero-wrapper {
+    flex-direction: column;
+  }
+  #temporadas[data-season="enero"] .enero-hero-photo {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    order: -1;
+  }
+  #temporadas[data-season="enero"] .enero-hero-wrapper .season-hero {
+    text-align: center;
+    align-items: center;
+  }
+}
+
+@media (max-width: 640px) {
+  #temporadas[data-season="enero"] .season-hero {
+    padding: 2rem 1.5rem;
+  }
+  #temporadas[data-season="enero"] .season-title {
+    font-size: 1.7rem;
+  }
+  #temporadas[data-season="enero"] .season-milestone {
+    font-size: 0.55rem;
+    padding: 0.4rem 1rem;
+    letter-spacing: 3px;
+  }
+  #temporadas[data-season="enero"] .enero-quick-nav {
+    gap: 0.6rem;
+  }
+  #temporadas[data-season="enero"] .enero-quick-nav a {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+  }
+  #temporadas[data-season="enero"] .enero-hero-photo {
+    width: 260px;
+    height: 260px;
+  }
+}
+
+/* ===== MOBILE PEQUENO (<= 480px) ===== */
+@media (max-width: 480px) {
+  section { padding: 4rem 5%; }
+  #temporadas { padding: 4rem 5%; }
+  #temporadas[data-season="enero"] .enero-hero-wrapper {
+    gap: 1.5rem;
+  }
+  #temporadas[data-season="enero"] .season-hero {
+    padding: 1.5rem 1rem;
+  }
+  #temporadas[data-season="enero"] .season-title {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
+  #temporadas[data-season="enero"] .season-subtitle {
+    font-size: 1rem;
+  }
+  #temporadas[data-season="enero"] .enero-hero-photo {
+    width: 220px;
+    height: 220px;
+  }
+  #temporadas[data-season="enero"] .enero-quick-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #temporadas[data-season="enero"] .enero-quick-nav a {
+    padding: 0.5rem 1rem;
+    font-size: 0.65rem;
   }
 }
 

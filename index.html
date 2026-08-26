@@ -16,7 +16,7 @@
   <meta property="og:locale" content="es_CO">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Quicksand:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/navbar.css">
   <link rel="stylesheet" href="css/hero.css">
@@ -135,42 +135,45 @@
     <div class="season-panels">
       <!-- ENERO -->
       <article class="season-panel is-active" data-panel="enero" role="tabpanel">
-        <nav class="season-quick-nav month-nav" aria-label="Navegación de enero">
-          <a href="#reyes-magos">Reyes Magos</a>
-          <a href="#uniformes">Uniformes</a>
-          <a href="#batas">Batas</a>
-        </nav>
-        <div class="season-hero">
-          <span class="season-milestone">Hito Colombiano · Reyes Magos y regreso a clases</span>
-          <h3 class="season-title">Reyes, uniformes y batas para enero.</h3>
-          <p class="season-subtitle">Celebra el Día de Reyes con nuestros trajes y prepárate para el nuevo año escolar con uniformes y batas ajustados a la medida. Elige una categoría y te llevamos a su sección.</p>
-          <a class="season-cta" href="https://wa.me/573107706615?text=Hola%2C%20quiero%20cotizar%20para%20enero.">Cotizar por WhatsApp</a>
-        </div>
-        <div class="season-grid">
-          <a class="season-item season-nav-card" href="#reyes-magos">
-            <img src="assets/img/reyes_magos.jpg" alt="Reyes Magos con túnica">
-            <div class="season-item-body">
-              <h4>Reyes Magos</h4>
-              <p>Trajes para cabalgatas y el Día de Reyes.</p>
+        <div class="season-hero-wrapper enero-hero-wrapper">
+          <div class="season-hero enero-hero-full">
+            <span class="season-milestone">Hito Colombiano · Reyes Magos y regreso a clases</span>
+            <h3 class="season-title">Reyes, uniformes y batas para enero.</h3>
+            <p class="season-subtitle">Celebra el Día de Reyes con nuestros trajes y prepárate para el nuevo año escolar con uniformes y batas ajustados a la medida. Elige una categoría y te llevamos a su sección.</p>
+            <a class="season-cta" href="https://wa.me/573107706615?text=Hola%2C%20quiero%20cotizar%20para%20enero.">Cotizar por WhatsApp</a>
+            <nav class="season-quick-nav enero-quick-nav" aria-label="Navegación de enero">
+              <a href="#reyes-magos">Reyes Magos</a>
+              <a href="#uniformes">Uniformes</a>
+              <a href="#batas">Batas</a>
+            </nav>
+          </div>
+          <div class="enero-hero-photo" id="enero-hero-photo">
+            <img src="assets/img/reyes_magos.jpg" alt="Foto de temporada - Enero">
+            <button class="admin-season-photo-btn admin-ui photo-change-btn" type="button" data-season-photo="enero-hero" title="Cambiar foto de esta temporada">Cambiar fotos de esta temporada</button>
+            <div class="admin-photo-controls admin-ui" id="admin-photo-controls">
+              <div class="admin-photo-hint">Rueda: tamaño | Triple clic: ajustar | Arrastrar: mover | Shift+Rueda: mover X | Ctrl+Rueda: mover Y</div>
+              <div class="admin-control-row">
+                <label>Ancho</label>
+                <input type="range" min="100" max="1200" value="380" class="admin-range" data-control="width">
+                <span class="admin-range-val">380</span>
+              </div>
+              <div class="admin-control-row">
+                <label>Alto</label>
+                <input type="range" min="100" max="1200" value="380" class="admin-range" data-control="height">
+                <span class="admin-range-val">380</span>
+              </div>
+              <div class="admin-control-row">
+                <label>Mover X</label>
+                <input type="range" min="-500" max="500" value="0" class="admin-range" data-control="posX">
+                <span class="admin-range-val">0</span>
+              </div>
+              <div class="admin-control-row">
+                <label>Mover Y</label>
+                <input type="range" min="-500" max="500" value="0" class="admin-range" data-control="posY">
+                <span class="admin-range-val">0</span>
+              </div>
             </div>
-            <span class="expand-icon">&#8594;</span>
-          </a>
-          <a class="season-item season-nav-card" href="#uniformes">
-            <img src="assets/img/uniforme_colegio.jpg" alt="Uniforme escolar de colegio">
-            <div class="season-item-body">
-              <h4>Uniformes Escolares</h4>
-              <p>Confección y ajuste para el nuevo año escolar.</p>
-            </div>
-            <span class="expand-icon">&#8594;</span>
-          </a>
-          <a class="season-item season-nav-card" href="#batas">
-            <img src="assets/img/bata_laboratorio.jpg" alt="Bata de laboratorio">
-            <div class="season-item-body">
-              <h4>Batas</h4>
-              <p>Batas de laboratorio, estudio y profesional.</p>
-            </div>
-            <span class="expand-icon">&#8594;</span>
-          </a>
+          </div>
         </div>
 
         <div class="season-sub-sections">
@@ -1163,6 +1166,9 @@
   <a class="whatsapp-float" href="https://wa.me/573107706615?text=Hola%2C%20quiero%20comunicarme." aria-label="Escríbenos por WhatsApp" title="Escríbenos por WhatsApp">
     <svg viewBox="0 0 24 24" width="30" height="30" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
   </a>
+  <button class="admin-ui edit-float" id="edit-float-btn" title="Editor Visual" aria-label="Abrir editor visual">
+    <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  </button>
   <a id="float-download-contact" class="contact-float" href="#" download="ELBODEGONDELOSTRAJES.vcf" aria-label="Guardar contacto" title="Guardar contacto ELBODEGONDELOSTRAJES">
     <svg viewBox="0 0 24 24" width="24" height="24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h7v5h5v11H6zm2-6h8v2H8v-2zm0 4h6v2H8v-2zm0-8h4v2H8V10z"/></svg>
   </a>

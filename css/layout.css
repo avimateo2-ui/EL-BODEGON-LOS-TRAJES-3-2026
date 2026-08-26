@@ -15,10 +15,11 @@ section {
 }
 
 .section-head span {
-  font-size: 0.85rem;
-  color: var(--ashen-grey);
+  font-size: 1.1rem;
+  color: var(--halloween-vivid);
   text-transform: uppercase;
   letter-spacing: 10px;
+  font-weight: 700;
 }
 
 /* CATALOG GRID */
@@ -90,7 +91,7 @@ section {
 .lightbox {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2000;
   background: rgba(0, 0, 0, 0.92);
   display: flex;
   align-items: center;
@@ -143,12 +144,14 @@ section {
   font-size: 1.8rem;
   color: var(--halloween-vivid);
   margin-bottom: 0.8rem;
+  text-shadow: 0 0 12px rgba(255, 179, 71, 0.25);
 }
 
 .card-body-haunted p {
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 0.95rem;
   font-style: italic;
+  font-weight: 500;
 }
 
 /* AVISO: DISFRAZ A LA MEDIDA */
@@ -160,7 +163,7 @@ section {
   background: linear-gradient(135deg, var(--season-bg2), var(--season-bg1));
   color: var(--season-dark);
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.9;
   border-radius: 12px;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
@@ -180,10 +183,10 @@ section {
 .catalog-group-title {
   font-family: 'Cinzel Decorative', cursive;
   font-size: 1.35rem;
-  color: var(--season-accent);
+  color: var(--halloween-vivid);
   text-transform: uppercase;
   letter-spacing: 4px;
-  border-bottom: 1px solid var(--season-accent);
+  border-bottom: 2px solid var(--halloween-primary);
   padding-bottom: 1rem;
   margin: 3.5rem 0 2rem;
 }
@@ -203,7 +206,8 @@ section {
 }
 
 #temporadas[data-season="diciembre"] .card-body-haunted p {
-  color: var(--season-dark-soft);
+  color: var(--season-dark);
+  font-weight: 600;
 }
 
 

@@ -1,6 +1,7 @@
 /* ===== Panel de administracion ===== */
 .admin-ui { box-sizing: border-box; display: none !important; }
 .admin-fab { display: flex !important; }
+body.admin-edit-mode .admin-fab { display: flex !important; }
 body.admin-edit-mode .admin-ui { display: flex !important; }
 body.admin-edit-mode .admin-addbtn,
 body.admin-edit-mode .admin-addbtn-text,
@@ -11,6 +12,7 @@ body.admin-edit-mode .admin-logout-fab { display: block !important; }
 body.admin-edit-mode .admin-toolbar { display: flex !important; }
 body.admin-edit-mode .admin-logout-fab { display: flex !important; }
 body.admin-edit-mode .admin-save-fab { display: flex !important; }
+body.admin-edit-mode .admin-photo-controls { display: flex !important; }
 .admin-edit-mode { cursor: auto; }
 
 .admin-fab {
@@ -91,6 +93,15 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
   color: #fff; font-weight: 700;
 }
 .admin-btn-primary:hover { background: linear-gradient(135deg, #9a3fd4, #6633b2); }
+.admin-btn-editor {
+  background: linear-gradient(135deg, #FFD700, #DAA520); border: none;
+  color: #0D2440; font-weight: 700;
+}
+.admin-btn-editor:hover { background: linear-gradient(135deg, #FFE44D, #FFD700); }
+.admin-btn-editor.is-active {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000);
+  color: #fff;
+}
 .admin-btn-danger {
   border: 2px solid #ff6b6b; color: #ff8f8f; font-weight: 700;
   background: rgba(224, 36, 36, 0.18);
@@ -184,27 +195,401 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
 
 .admin-season-photo-btn {
   display: none;
-  position: relative;
-  z-index: 26;
-  margin: 0.5rem auto 0;
-  padding: 0.35rem 0.7rem;
+  position: absolute;
+  z-index: 30;
+  margin: 0;
+  padding: 0.4rem 0.8rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  background: rgba(0, 0, 0, 0.35);
-  color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+  color: rgba(255, 255, 255, 0.8);
   font: inherit;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   cursor: pointer;
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   transition: opacity 0.3s ease, color 0.3s ease, background 0.3s ease;
+  white-space: nowrap;
 }
 .admin-season-photo-btn:hover {
   opacity: 1;
   color: #fff;
-  background: rgba(90, 50, 160, 0.5);
+  background: rgba(90, 50, 160, 0.7);
+}
+
+/* Controles de foto para admin */
+.admin-photo-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 35;
+  background: rgba(10, 5, 20, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.8rem;
+  border-top: 2px solid rgba(255, 215, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.admin-control-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.admin-control-row label {
+  color: #FFD700;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  min-width: 55px;
+}
+
+.admin-range {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 2px;
+  outline: none;
+}
+
+.admin-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.admin-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.admin-range-val {
+  color: #CBD5E1;
+  font-size: 0.6rem;
+  font-weight: 700;
+  min-width: 30px;
+  text-align: right;
+}
+
+.admin-photo-hint {
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 0.55rem;
+  text-align: center;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.5px;
+}
+
+/* ===== EDITOR VISUAL ===== */
+.editor-handle {
+  position: absolute;
+  z-index: 9998;
+  border: 3px dashed #FFD700;
+  border-radius: 4px;
+  pointer-events: none;
+  display: none;
+  transition: all 0.1s ease;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.editor-selected {
+  outline: 2px solid #FFD700 !important;
+  outline-offset: 2px;
+}
+
+.editor-panel {
+  position: fixed;
+  right: -320px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 300px;
+  max-height: 80vh;
+  background: rgba(10, 5, 20, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 16px;
+  z-index: 9997;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 215, 0, 0.15);
+}
+
+.editor-panel.is-open {
+  right: 20px;
+}
+
+.editor-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.25);
+}
+
+.editor-panel-title {
+  color: #FFD700;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.editor-panel-close {
+  background: none;
+  border: none;
+  color: #CBD5E1;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 0.3rem;
+  line-height: 1;
+}
+
+.editor-panel-close:hover { color: #FFD700; }
+
+.editor-panel-body {
+  padding: 1rem 1.2rem;
+}
+
+.editor-prop-group {
+  margin-bottom: 0.8rem;
+}
+
+.editor-prop-group label {
+  display: block;
+  color: rgba(255, 215, 0, 0.6);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.3rem;
+}
+
+.editor-el-tag {
+  color: #CBD5E1;
+  font-size: 0.8rem;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.editor-prop-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.editor-prop-row label {
+  color: rgba(255, 215, 0, 0.7);
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 70px;
+}
+
+.editor-input {
+  flex: 1;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 6px;
+  color: #CBD5E1;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  width: 80px;
+}
+
+.editor-input:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+.editor-color {
+  width: 36px;
+  height: 28px;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  background: none;
+  padding: 0;
+}
+
+.editor-color::-webkit-color-swatch-wrapper { padding: 2px; }
+.editor-color::-webkit-color-swatch { border-radius: 3px; border: none; }
+
+.editor-range {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 215, 0, 0.2);
+  border-radius: 2px;
+}
+
+.editor-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFD700;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+}
+
+.editor-range-val {
+  color: #CBD5E1;
+  font-size: 0.7rem;
+  font-weight: 600;
+  min-width: 25px;
+  text-align: right;
+}
+
+.editor-select {
+  flex: 1;
+  background: rgba(255, 215, 0, 0.08);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 6px;
+  color: #CBD5E1;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.editor-select:focus {
+  outline: none;
+  border-color: #FFD700;
+}
+
+.editor-select option {
+  background: #0D2440;
+  color: #CBD5E1;
+}
+
+.editor-section-title {
+  color: rgba(255, 215, 0, 0.5);
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0.8rem 0 0.4rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+}
+
+.editor-pos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.editor-pos-btn {
+  width: 100%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 215, 0, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 215, 0, 0.05);
+  color: #FFD700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.editor-pos-btn:hover {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: #FFD700;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.editor-pos-center {
+  background: rgba(255, 215, 0, 0.15);
+  border-color: rgba(255, 215, 0, 0.4);
+}
+
+.editor-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.editor-btn {
+  flex: 1;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.editor-btn-save {
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+}
+
+.editor-btn-save:hover {
+  background: linear-gradient(135deg, #2ee676, #1aad7a);
+  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+}
+
+.editor-btn-drag {
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  color: #0D2440;
+}
+
+.editor-btn-drag:hover {
+  background: linear-gradient(135deg, #FFE44D, #FFD700);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+}
+
+.editor-btn-reset {
+  background: rgba(255, 215, 0, 0.1);
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.editor-btn-reset:hover {
+  background: rgba(255, 215, 0, 0.2);
+}
+
+.editor-btn-delete {
+  background: rgba(255, 50, 50, 0.15);
+  color: #ff6b6b;
+  border: 1px solid rgba(255, 50, 50, 0.3);
+}
+
+.editor-btn-delete:hover {
+  background: rgba(255, 50, 50, 0.3);
+  color: #fff;
 }
 
 .admin-delbtn-host { position: relative; }
@@ -254,9 +639,28 @@ body.admin-edit-mode .admin-save-fab { display: flex !important; }
   animation: whatsapp-pulse 2s infinite;
 }
 
+/* ===== Botón flotante de editor visual ===== */
+.edit-float {
+  position: fixed; left: 1.25rem; bottom: 5.25rem; z-index: 960;
+  width: 3.4rem; height: 3.4rem;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  border: none;
+  border-radius: 50%; box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  transition: transform .15s ease, box-shadow .15s ease;
+  cursor: pointer;
+}
+.edit-float:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 26px rgba(0,0,0,.45);
+}
+.edit-float.is-active {
+  background: linear-gradient(135deg, #ff4d4d, #cc0000);
+}
+
 /* ===== Botón flotante de guardar contacto ===== */
 .contact-float {
-  position: fixed; left: 1.25rem; bottom: 5.25rem; z-index: 960;
+  position: fixed; left: 1.25rem; bottom: 9.25rem; z-index: 960;
   width: 3.4rem; height: 3.4rem;
   display: flex; align-items: center; justify-content: center;
   background: linear-gradient(135deg, #6366f1, #4f46e5);

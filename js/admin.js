@@ -17,7 +17,7 @@
   var MAX_RETRIES = 3;
 
   var content = {
-    version: 1,
+    version: 2,
     usernameHash: null,
     passwordHash: null,
     texts: [],
@@ -26,7 +26,9 @@
     addTexts: [],
     deleteCards: [],
     deleteTexts: [],
-    seasonCovers: {}
+    seasonCovers: {},
+    photoSettings: {},
+    editorStyles: {}
   };
 
   var authed = false;
@@ -438,6 +440,8 @@
         var landing;
         if (month === 'hero') {
           landing = document.getElementById('inicio');
+        } else if (month === 'enero-hero') {
+          landing = document.getElementById('enero-hero-photo');
         } else {
           landing = document.querySelector('.halloween-landing[data-landing="' + month + '"]') ||
                     document.getElementById('halloween-landing');
@@ -452,13 +456,26 @@
           var rd = new FileReader();
           rd.onload = function () {
             compressImage(rd.result, 1000, 0.55).then(function (compressed) {
-              landing.classList.add('has-cover-photo');
-              landing.style.backgroundImage = 'url(' + compressed + ')';
-              landing.style.backgroundSize = 'cover';
-              landing.style.backgroundPosition = 'center';
-              content.seasonCovers[month] = compressed;
-              autoSave();
-              toast('Portada de ' + month + ' actualizada.');
+              if (month === 'enero-hero') {
+                var img = landing.querySelector('img');
+                if (img) {
+                  img.src = compressed;
+                  img.style.width = '100%';
+                  img.style.height = '100%';
+                  img.style.objectFit = 'cover';
+                }
+                content.seasonCovers[month] = compressed;
+                autoSave();
+                toast('Foto de enero actualizada.');
+              } else {
+                landing.classList.add('has-cover-photo');
+                landing.style.backgroundImage = 'url(' + compressed + ')';
+                landing.style.backgroundSize = 'cover';
+                landing.style.backgroundPosition = 'center';
+                content.seasonCovers[month] = compressed;
+                autoSave();
+                toast('Portada de ' + month + ' actualizada.');
+              }
             });
           };
           rd.readAsDataURL(f);
@@ -466,6 +483,557 @@
         input.click();
       });
     });
+  }
+
+  function wirePhotoControls() {
+    var controls = document.getElementById('admin-photo-controls');
+    if (!controls || controls.dataset.adminWired) return;
+    controls.dataset.adminWired = '1';
+    var photo = document.getElementById('enero-hero-photo');
+    if (!photo) return;
+
+    if (!content.photoSettings) content.photoSettings = {};
+    var s = content.photoSettings.enero || {};
+    if (s.width) photo.style.width = s.width + 'px';
+    if (s.height) photo.style.height = s.height + 'px';
+    if (s.posX) photo.style.transform = 'translateX(' + s.posX + 'px)';
+    if (s.posY) photo.style.marginTop = s.posY + 'px';
+
+    qa('.admin-range', controls).forEach(function (range) {
+      var key = range.dataset.control;
+      var valSpan = range.parentElement.querySelector('.admin-range-val');
+      if (s[key] !== undefined) {
+        range.value = s[key];
+        if (valSpan) valSpan.textContent = s[key];
+      }
+      range.addEventListener('input', function () {
+        var val = parseInt(range.value, 10);
+        if (valSpan) valSpan.textContent = val;
+        if (!content.photoSettings.enero) content.photoSettings.enero = {};
+        content.photoSettings.enero[key] = val;
+        if (key === 'width') photo.style.width = val + 'px';
+        if (key === 'height') photo.style.height = val + 'px';
+        if (key === 'posX') photo.style.transform = 'translateX(' + val + 'px)';
+        if (key === 'posY') photo.style.marginTop = val + 'px';
+        syncSliders();
+        autoSave();
+      });
+    });
+
+    function syncSliders() {
+      var ps = content.photoSettings.enero || {};
+      qa('.admin-range', controls).forEach(function (range) {
+        var key = range.dataset.control;
+        var valSpan = range.parentElement.querySelector('.admin-range-val');
+        if (ps[key] !== undefined) {
+          range.value = ps[key];
+          if (valSpan) valSpan.textContent = ps[key];
+        }
+      });
+    }
+
+    function getSettings() {
+      if (!content.photoSettings) content.photoSettings = {};
+      if (!content.photoSettings.enero) content.photoSettings.enero = {};
+      return content.photoSettings.enero;
+    }
+
+    /* RUEDA DEL MOUSE: tamano sin limite */
+    photo.addEventListener('wheel', function (e) {
+      if (!editMode) return;
+      e.preventDefault();
+      var st = getSettings();
+      var curW = parseInt(photo.style.width, 10) || 380;
+      var curH = parseInt(photo.style.height, 10) || 380;
+      var delta = e.deltaY > 0 ? -20 : 20;
+      var newW = Math.max(100, curW + delta);
+      var newH = Math.max(100, curH + delta);
+      photo.style.width = newW + 'px';
+      photo.style.height = newH + 'px';
+      st.width = newW;
+      st.height = newH;
+      syncSliders();
+      autoSave();
+    }, { passive: false });
+
+    /* TRIPLE CLIC: ciclar presets */
+    var clickCount = 0;
+    var clickTimer = null;
+    photo.addEventListener('click', function (e) {
+      if (!editMode) return;
+      if (e.target.closest('.photo-change-btn') || e.target.closest('.admin-photo-controls')) return;
+      clickCount++;
+      if (clickTimer) clearTimeout(clickTimer);
+      clickTimer = setTimeout(function () { clickCount = 0; }, 400);
+      if (clickCount >= 3) {
+        clickCount = 0;
+        var st = getSettings();
+        var curW = parseInt(photo.style.width, 10) || 380;
+        var presets = [
+          { w: 200, h: 200 },
+          { w: 300, h: 300 },
+          { w: 400, h: 400 },
+          { w: 500, h: 500 },
+          { w: 600, h: 400 }
+        ];
+        var idx = presets.findIndex(function (p) { return p.w === curW; });
+        var next = presets[(idx + 1) % presets.length];
+        photo.style.width = next.w + 'px';
+        photo.style.height = next.h + 'px';
+        st.width = next.w;
+        st.height = next.h;
+        syncSliders();
+        autoSave();
+        toast('Tamaño: ' + next.w + 'x' + next.h);
+      }
+    });
+
+    /* ARRASTRAR: mover sin limite */
+    var isDragging = false;
+    var startX, startY, origX, origY;
+    photo.addEventListener('mousedown', function (e) {
+      if (!editMode) return;
+      if (e.target.closest('.photo-change-btn') || e.target.closest('.admin-photo-controls')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      origX = parseInt(content.photoSettings.enero.posX, 10) || 0;
+      origY = parseInt(content.photoSettings.enero.posY, 10) || 0;
+      photo.style.cursor = 'grabbing';
+      photo.style.transition = 'none';
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!isDragging) return;
+      var st = getSettings();
+      var dx = e.clientX - startX;
+      var dy = e.clientY - startY;
+      var newX = origX + dx;
+      var newY = origY + dy;
+      photo.style.transform = 'translateX(' + newX + 'px)';
+      photo.style.marginTop = newY + 'px';
+      st.posX = newX;
+      st.posY = newY;
+      syncSliders();
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (isDragging) {
+        isDragging = false;
+        photo.style.cursor = '';
+        photo.style.transition = '';
+        autoSave();
+      }
+    });
+
+    /* SHIFT + RUEDA: mover horizontal */
+    photo.addEventListener('wheel', function (e) {
+      if (!editMode || !e.shiftKey) return;
+      e.preventDefault();
+      var st = getSettings();
+      var curX = parseInt(photo.style.transform.replace(/[^-\d]/g, ''), 10) || 0;
+      var delta = e.deltaY > 0 ? -15 : 15;
+      var newX = curX + delta;
+      photo.style.transform = 'translateX(' + newX + 'px)';
+      st.posX = newX;
+      syncSliders();
+      autoSave();
+    }, { passive: false });
+
+    /* CTRL + RUEDA: mover vertical */
+    photo.addEventListener('wheel', function (e) {
+      if (!editMode || !e.ctrlKey) return;
+      e.preventDefault();
+      var st = getSettings();
+      var curY = parseInt(photo.style.marginTop, 10) || 0;
+      var delta = e.deltaY > 0 ? -15 : 15;
+      var newY = curY + delta;
+      photo.style.marginTop = newY + 'px';
+      st.posY = newY;
+      syncSliders();
+      autoSave();
+    }, { passive: false });
+  }
+
+  /* ---------- EDITOR VISUAL COMPLETO ---------- */
+
+  var editorActive = false;
+  var selectedEl = null;
+  var dragState = { active: false, startX: 0, startY: 0, origLeft: 0, origTop: 0 };
+
+  function wireVisualEditor() {
+    if (document.body.dataset.visualEditorWired) return;
+    document.body.dataset.visualEditorWired = '1';
+
+    /* Panel de propiedades */
+    var panel = document.createElement('div');
+    panel.className = 'admin-ui editor-panel';
+    panel.id = 'editor-panel';
+    panel.innerHTML =
+      '<div class="editor-panel-header">' +
+        '<span class="editor-panel-title">Editor Visual</span>' +
+        '<button type="button" class="editor-panel-close" data-action="close">&times;</button>' +
+      '</div>' +
+      '<div class="editor-panel-body">' +
+        '<div class="editor-prop-group">' +
+          '<label>Elemento</label>' +
+          '<span class="editor-el-tag" id="editor-el-tag">Ninguno</span>' +
+        '</div>' +
+        '<div class="editor-section-title">Posicion</div>' +
+        '<div class="editor-pos-grid">' +
+          '<button type="button" class="editor-pos-btn" data-pos="left-top" title="Arriba izquierda">&#8598;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="center-top" title="Centro arriba">&#8593;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="right-top" title="Arriba derecha">&#8599;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="left-center" title="Izquierda centro">&#8592;</button>' +
+          '<button type="button" class="editor-pos-btn editor-pos-center" data-pos="center-center" title="Centro">&#9679;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="right-center" title="Derecha centro">&#8594;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="left-bottom" title="Abajo izquierda">&#8601;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="center-bottom" title="Centro abajo">&#8595;</button>' +
+          '<button type="button" class="editor-pos-btn" data-pos="right-bottom" title="Abajo derecha">&#8603;</button>' +
+        '</div>' +
+        '<div class="editor-section-title">Tamano</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Ancho</label>' +
+          '<input type="number" class="editor-input" data-prop="width" min="20" max="2000"> px' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Alto</label>' +
+          '<input type="number" class="editor-input" data-prop="height" min="20" max="2000"> px' +
+        '</div>' +
+        '<div class="editor-section-title">Desplazamiento</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>X</label>' +
+          '<input type="number" class="editor-input" data-prop="left"> px' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Y</label>' +
+          '<input type="number" class="editor-input" data-prop="top"> px' +
+        '</div>' +
+        '<div class="editor-section-title">Apariencia</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Fondo</label>' +
+          '<input type="color" class="editor-color" data-prop="backgroundColor">' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Color texto</label>' +
+          '<input type="color" class="editor-color" data-prop="color">' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Borde</label>' +
+          '<input type="number" class="editor-input" data-prop="borderWidth" min="0" max="20"> px' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Radio</label>' +
+          '<input type="number" class="editor-input" data-prop="borderRadius" min="0" max="100"> px' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Opacidad</label>' +
+          '<input type="range" class="editor-range" data-prop="opacity" min="0" max="1" step="0.05">' +
+          '<span class="editor-range-val" id="editor-opacity-val">1</span>' +
+        '</div>' +
+        '<div class="editor-section-title">Texto</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Tamano</label>' +
+          '<input type="number" class="editor-input" data-prop="fontSize" min="8" max="100"> px' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Fuente</label>' +
+          '<select class="editor-select" data-prop="fontFamily">' +
+            '<option value="">Default</option>' +
+            '<option value="Quicksand, sans-serif">Quicksand</option>' +
+            '<option value="Cinzel Decorative, cursive">Cinzel Decorative</option>' +
+            '<option value="Arial, sans-serif">Arial</option>' +
+            '<option value="Georgia, serif">Georgia</option>' +
+            '<option value="Times New Roman, serif">Times New Roman</option>' +
+            '<option value="Verdana, sans-serif">Verdana</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="editor-prop-row">' +
+          '<label>Peso</label>' +
+          '<select class="editor-select" data-prop="fontWeight">' +
+            '<option value="">Default</option>' +
+            '<option value="300">Light (300)</option>' +
+            '<option value="400">Regular (400)</option>' +
+            '<option value="500">Medium (500)</option>' +
+            '<option value="600">SemiBold (600)</option>' +
+            '<option value="700">Bold (700)</option>' +
+            '<option value="800">ExtraBold (800)</option>' +
+          '</select>' +
+        '</div>' +
+        '<div class="editor-actions">' +
+          '<button type="button" class="editor-btn editor-btn-save" data-action="save">Guardar</button>' +
+          '<button type="button" class="editor-btn editor-btn-drag" data-action="drag">Mover</button>' +
+          '<button type="button" class="editor-btn editor-btn-reset" data-action="reset">Restablecer</button>' +
+          '<button type="button" class="editor-btn editor-btn-delete" data-action="delete">Eliminar</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(panel);
+
+    /* Handle de seleccion */
+    var handle = document.createElement('div');
+    handle.className = 'editor-handle';
+    handle.id = 'editor-handle';
+    document.body.appendChild(handle);
+
+    /* Boton flotante de editor */
+    var editBtn = document.getElementById('edit-float-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editorActive = !editorActive;
+        editBtn.classList.toggle('is-active', editorActive);
+        if (!editorActive) deselectElement();
+        toast(editorActive ? 'Editor activado. Haz clic en cualquier elemento.' : 'Editor desactivado.');
+      });
+    }
+
+    /* Click en panel cerrar */
+    panel.querySelector('[data-action="close"]').addEventListener('click', function () {
+      deselectElement();
+      editorActive = false;
+      if (editBtn) editBtn.classList.remove('is-active');
+    });
+
+    /* Inputs del panel */
+    qa('.editor-input, .editor-color, .editor-range, .editor-select', panel).forEach(function (input) {
+      input.addEventListener('input', function () {
+        if (!selectedEl) return;
+        var prop = input.dataset.prop;
+        var val = input.value;
+        if (input.type === 'range') {
+          var valSpan = input.parentElement.querySelector('.editor-range-val');
+          if (valSpan) valSpan.textContent = val;
+        }
+        if (input.tagName === 'SELECT') {
+          selectedEl.style[prop] = val;
+        } else if (prop === 'width' || prop === 'height' || prop === 'left' || prop === 'top' ||
+            prop === 'borderWidth' || prop === 'borderRadius' || prop === 'fontSize') {
+          selectedEl.style[prop] = val + 'px';
+        } else {
+          selectedEl.style[prop] = val;
+        }
+        updateHandle();
+        autoSave();
+      });
+    });
+
+    /* Boton guardar */
+    panel.querySelector('[data-action="save"]').addEventListener('click', function () {
+      autoSave();
+      toast('Cambios guardados.');
+    });
+
+    /* Boton mover */
+    panel.querySelector('[data-action="drag"]').addEventListener('click', function () {
+      if (!selectedEl) return;
+      toggleDragMode();
+    });
+
+    /* Boton restablecer */
+    panel.querySelector('[data-action="reset"]').addEventListener('click', function () {
+      if (!selectedEl) return;
+      if (selectedEl.dataset.origStyles) {
+        selectedEl.style.cssText = selectedEl.dataset.origStyles;
+        delete selectedEl.dataset.origStyles;
+        syncPanel();
+        updateHandle();
+        autoSave();
+        toast('Estilos restablecidos.');
+      }
+    });
+
+    /* Boton eliminar */
+    panel.querySelector('[data-action="delete"]').addEventListener('click', function () {
+      if (!selectedEl) return;
+      if (window.confirm('¿Eliminar este elemento?')) {
+        var el = selectedEl;
+        deselectElement();
+        el.remove();
+        autoSave();
+        toast('Elemento eliminado.');
+      }
+    });
+
+    /* Posicion grid */
+    qa('.editor-pos-btn', panel).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (!selectedEl) return;
+        var pos = btn.dataset.pos;
+        var parent = selectedEl.parentElement;
+        if (!parent) return;
+        var pComputed = window.getComputedStyle(parent);
+        if (pComputed.position === 'static') parent.style.position = 'relative';
+        var computed = window.getComputedStyle(selectedEl);
+        if (computed.position === 'static') selectedEl.style.position = 'absolute';
+        var pH = parent.offsetHeight;
+        var pW = parent.offsetWidth;
+        var eH = selectedEl.offsetHeight;
+        var eW = selectedEl.offsetWidth;
+        var coords = {
+          'left-top': { left: '0px', top: '0px' },
+          'center-top': { left: Math.round((pW - eW) / 2) + 'px', top: '0px' },
+          'right-top': { left: (pW - eW) + 'px', top: '0px' },
+          'left-center': { left: '0px', top: Math.round((pH - eH) / 2) + 'px' },
+          'center-center': { left: Math.round((pW - eW) / 2) + 'px', top: Math.round((pH - eH) / 2) + 'px' },
+          'right-center': { left: (pW - eW) + 'px', top: Math.round((pH - eH) / 2) + 'px' },
+          'left-bottom': { left: '0px', top: (pH - eH) + 'px' },
+          'center-bottom': { left: Math.round((pW - eW) / 2) + 'px', top: (pH - eH) + 'px' },
+          'right-bottom': { left: (pW - eW) + 'px', top: (pH - eH) + 'px' }
+        };
+        var c = coords[pos];
+        if (c) {
+          selectedEl.style.left = c.left;
+          selectedEl.style.top = c.top;
+        }
+        syncPanel();
+        updateHandle();
+        autoSave();
+        toast('Posicion aplicada.');
+      });
+    });
+
+    /* Click en la pagina para seleccionar */
+    document.addEventListener('click', function (e) {
+      if (!editMode || !editorActive) return;
+      if (e.target.closest('.admin-toolbar') || e.target.closest('.admin-fab') ||
+          e.target.closest('.admin-addbtn') || e.target.closest('.admin-delbtn') ||
+          e.target.closest('.admin-seasbtn') || e.target.closest('.admin-photobtn') ||
+          e.target.closest('.photo-change-btn') || e.target.closest('.admin-photo-controls') ||
+          e.target.closest('.admin-login-panel') || e.target.closest('.toast-container') ||
+          e.target.closest('.editor-panel') || e.target.closest('.editor-handle') ||
+          e.target.closest('button[data-add-section]') || e.target.closest('button[data-delete-section]')) return;
+      e.preventDefault();
+      e.stopPropagation();
+      selectElement(e.target);
+    });
+
+    /* ESC para deseleccionar */
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && editorActive) {
+        deselectElement();
+      }
+    });
+
+    /* Drag con handle */
+    handle.addEventListener('mousedown', function (e) {
+      if (!selectedEl) return;
+      e.preventDefault();
+      dragState.active = true;
+      dragState.startX = e.clientX;
+      dragState.startY = e.clientY;
+      dragState.origLeft = parseInt(selectedEl.style.left, 10) || 0;
+      dragState.origTop = parseInt(selectedEl.style.top, 10) || 0;
+      var computed = window.getComputedStyle(selectedEl);
+      if (computed.position === 'static') selectedEl.style.position = 'relative';
+      handle.style.cursor = 'grabbing';
+    });
+
+    document.addEventListener('mousemove', function (e) {
+      if (!dragState.active || !selectedEl) return;
+      var dx = e.clientX - dragState.startX;
+      var dy = e.clientY - dragState.startY;
+      selectedEl.style.left = (dragState.origLeft + dx) + 'px';
+      selectedEl.style.top = (dragState.origTop + dy) + 'px';
+      updateHandle();
+      syncPanel();
+    });
+
+    document.addEventListener('mouseup', function () {
+      if (dragState.active) {
+        dragState.active = false;
+        handle.style.cursor = '';
+        autoSave();
+      }
+    });
+
+    /* RUEDA: resize elementos seleccionados */
+    document.addEventListener('wheel', function (e) {
+      if (!editMode || !editorActive || !selectedEl) return;
+      if (e.target.closest('.editor-panel')) return;
+      e.preventDefault();
+      var curW = selectedEl.offsetWidth;
+      var curH = selectedEl.offsetHeight;
+      var factor = e.deltaY > 0 ? 0.95 : 1.05;
+      selectedEl.style.width = Math.max(30, Math.round(curW * factor)) + 'px';
+      selectedEl.style.height = Math.max(30, Math.round(curH * factor)) + 'px';
+      syncPanel();
+      updateHandle();
+      autoSave();
+    }, { passive: false });
+  }
+
+  function selectElement(el) {
+    if (selectedEl) deselectElement();
+    selectedEl = el;
+    if (!el.dataset.origStyles) el.dataset.origStyles = el.style.cssText;
+    if (!el.dataset.editorStyle) {
+      el.dataset.editorStyle = el.tagName + (el.id ? '#' + el.id : '') + '.' + String(el.className || 'el').split(' ')[0] + '_' + Date.now();
+    }
+    el.classList.add('editor-selected');
+    var handle = document.getElementById('editor-handle');
+    if (handle) handle.style.display = 'block';
+    updateHandle();
+    syncPanel();
+    document.getElementById('editor-panel').classList.add('is-open');
+  }
+
+  function deselectElement() {
+    if (selectedEl) {
+      selectedEl.classList.remove('editor-selected');
+      selectedEl = null;
+    }
+    var handle = document.getElementById('editor-handle');
+    if (handle) handle.style.display = 'none';
+    var panel = document.getElementById('editor-panel');
+    if (panel) panel.classList.remove('is-open');
+  }
+
+  function updateHandle() {
+    if (!selectedEl) return;
+    var handle = document.getElementById('editor-handle');
+    if (!handle) return;
+    var rect = selectedEl.getBoundingClientRect();
+    handle.style.left = rect.left + window.scrollX - 4 + 'px';
+    handle.style.top = rect.top + window.scrollY - 4 + 'px';
+    handle.style.width = rect.width + 8 + 'px';
+    handle.style.height = rect.height + 8 + 'px';
+  }
+
+  function syncPanel() {
+    if (!selectedEl) return;
+    var s = window.getComputedStyle(selectedEl);
+    var tag = selectedEl.tagName.toLowerCase();
+    if (selectedEl.id) tag += '#' + selectedEl.id;
+    if (selectedEl.className) tag += '.' + String(selectedEl.className).split(' ')[0];
+    var elTag = document.getElementById('editor-el-tag');
+    if (elTag) elTag.textContent = tag;
+    var panel = document.getElementById('editor-panel');
+    qa('.editor-input', panel).forEach(function (inp) {
+      var prop = inp.dataset.prop;
+      var raw = selectedEl.style[prop] || '';
+      var num = parseInt(raw, 10);
+      if (!isNaN(num)) inp.value = num;
+    });
+    qa('.editor-color', panel).forEach(function (inp) {
+      var prop = inp.dataset.prop;
+      var raw = selectedEl.style[prop] || '';
+      if (raw && raw.charAt(0) === '#') inp.value = raw;
+    });
+    var opRange = panel.querySelector('[data-prop="opacity"]');
+    if (opRange) {
+      opRange.value = selectedEl.style.opacity || '1';
+      var opVal = panel.querySelector('#editor-opacity-val');
+      if (opVal) opVal.textContent = opRange.value;
+    }
+  }
+
+  function toggleDragMode() {
+    var handle = document.getElementById('editor-handle');
+    if (handle) {
+      handle.style.display = handle.style.display === 'none' ? 'block' : 'none';
+    }
   }
 
   function publishCard(host) {
@@ -672,6 +1240,19 @@
     content.addTexts.forEach(function (entry) {
       insertText(entry);
     });
+    applyEditorStyles();
+  }
+
+  function applyEditorStyles() {
+    var es = content.editorStyles || {};
+    Object.keys(es).forEach(function (key) {
+      var sel = key.split('_')[0];
+      var el = document.querySelector(sel);
+      if (el && es[key]) {
+        el.style.cssText = es[key];
+        el.dataset.editorStyle = key;
+      }
+    });
   }
 
   function applySeasonCovers() {
@@ -871,6 +1452,8 @@
     ensurePhotoButtons();
     wireStatic();
     wireSeasonPhotoButtons();
+    wirePhotoControls();
+    wireVisualEditor();
   }
 
   function disableEditMode() {
@@ -1158,8 +1741,12 @@
   }
 
   function serialize() {
+    var editorStyles = {};
+    qa('[data-editor-style]').forEach(function (el) {
+      editorStyles[el.dataset.editorStyle] = el.style.cssText;
+    });
     var out = {
-      version: 1,
+      version: 2,
       usernameHash: content.usernameHash || null,
       passwordHash: content.passwordHash || null,
       texts: dedup(content.texts, 'sel'),
@@ -1172,7 +1759,9 @@
       }),
       deleteCards: content.deleteCards,
       deleteTexts: content.deleteTexts,
-      seasonCovers: content.seasonCovers || {}
+      seasonCovers: content.seasonCovers || {},
+      photoSettings: content.photoSettings || {},
+      editorStyles: editorStyles
     };
     return JSON.stringify(out, null, 2);
   }

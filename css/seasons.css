@@ -13,36 +13,78 @@
 }
 
 #temporadas[data-season="enero"] {
-  --season-accent: #b8892d;
-  --season-glow: rgba(184, 137, 45, 0.18);
-  --season-accent-soft: rgba(184, 137, 45, 0.09);
+  --season-accent: #D4A017;
+  --season-glow: rgba(212, 160, 23, 0.35);
+  --season-accent-soft: rgba(212, 160, 23, 0.15);
   background:
-    radial-gradient(circle at 85% 8%, rgba(184, 137, 45, 0.14), transparent 45%),
-    radial-gradient(circle at 12% 92%, rgba(255, 255, 255, 0.4), transparent 55%),
-    linear-gradient(165deg, #9fc6e2 0%, #c4e0f2 50%, #a3c9e5 100%);
-  border-top: 1px solid #b8892d;
-  border-bottom: 1px solid #b8892d;
+    radial-gradient(circle at 85% 8%, rgba(212, 160, 23, 0.25), transparent 45%),
+    radial-gradient(circle at 12% 92%, rgba(255, 255, 255, 0.5), transparent 55%),
+    linear-gradient(165deg, #7FB3E0 0%, #A8D4F2 50%, #85BBE8 100%);
+  border-top: 2px solid #D4A017;
+  border-bottom: 2px solid #D4A017;
+}
+
+#temporadas[data-season="enero"] .section-head {
+  border: none;
+  border-radius: 20px;
+  padding: 3rem 4rem;
+  background: linear-gradient(145deg, rgba(13, 36, 64, 0.9), rgba(26, 58, 107, 0.75));
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(255, 215, 0, 0.4), 0 0 50px rgba(255, 215, 0, 0.12);
+  margin-bottom: 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+#temporadas[data-season="enero"] .section-head::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%, rgba(255, 215, 0, 0.04) 100%);
+  pointer-events: none;
+}
+
+#temporadas[data-season="enero"] .section-head span {
+  color: #FFD700;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  letter-spacing: 8px;
 }
 
 #temporadas[data-season="enero"] .section-head h2 {
-  color: #b8892d;
+  color: #FFD700;
   font-size: 4.4rem;
-  text-shadow: 0 0 25px rgba(184, 137, 45, 0.4), 0 2px 3px rgba(29, 58, 92, 0.15);
+  text-shadow: 0 0 40px rgba(255, 215, 0, 0.7), 0 0 80px rgba(255, 215, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  margin-bottom: 1.5rem;
 }
 
 @media (max-width: 640px) {
   #temporadas[data-season="enero"] .section-head h2 {
     font-size: 2.7rem;
   }
-}
-
-#temporadas[data-season="enero"] .section-head span {
-  color: #b8892d;
+  #temporadas[data-season="enero"] .section-head {
+    padding: 2.5rem 1.5rem;
+    margin-bottom: 5rem;
+  }
 }
 
 #temporadas[data-season="enero"] .season-title,
 #temporadas[data-season="enero"] .season-range {
-  color: #1d3a5c;
+  color: #FFD700;
+  font-weight: 700;
+  text-shadow: 0 0 15px rgba(255, 215, 0, 0.45);
+}
+
+#temporadas[data-season="enero"] .season-range {
+  display: block;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.35);
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 4px;
 }
 
 #temporadas[data-season="enero"] .season-subtitle,
@@ -50,7 +92,7 @@
 #temporadas[data-season="enero"] .season-subsection p,
 #temporadas[data-season="enero"] .subsection-list li,
 #temporadas[data-season="enero"] .season-range {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 #temporadas[data-season="enero"] .season-subtitle,
@@ -58,18 +100,28 @@
 #temporadas[data-season="enero"] .season-subsection p,
 #temporadas[data-season="enero"] .subsection-list li,
 #temporadas[data-season="enero"] .season-blank-title {
-  color: #2c4a6e;
+  color: #E8DCC8;
+  font-weight: 500;
 }
 
 #temporadas[data-season="enero"] .season-subtitle strong,
 #temporadas[data-season="enero"] .season-subsection p strong,
 #temporadas[data-season="enero"] .subsection-list li strong {
-  color: #8a6a20;
+  color: #FFD700;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
 }
 
 #temporadas[data-season="enero"] .season-subsection h4 {
-  color: #8a6a20;
-  text-shadow: 0 0 14px rgba(184, 137, 45, 0.35);
+  color: #FFD700;
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
+  font-weight: 700;
+}
+
+#temporadas[data-season="enero"] .season-item-body h4 {
+  color: #FFD700;
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
 }
 
 /* CATÁLOGOS DENTRO DE LA TEMPORADA DE OCTUBRE */
@@ -89,10 +141,10 @@
 
 .season-catalog h4 {
   font-size: 1.6rem;
-  color: #ff8c00;
+  color: var(--halloween-vivid);
   letter-spacing: 3px;
   margin-bottom: 2rem;
-  text-shadow: 0 0 14px rgba(255, 140, 0, 0.3);
+  text-shadow: 0 0 14px rgba(255, 157, 46, 0.3);
 }
 
 .season-catalog-tag {
@@ -100,8 +152,8 @@
   font-size: 0.62rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: #ff8c00;
-  border: 1px solid #ff8c00;
+  color: var(--halloween-vivid);
+  border: 1px solid var(--halloween-primary);
   padding: 0.4rem 1.1rem;
   border-radius: 40px;
   margin-bottom: 1.2rem;
@@ -138,10 +190,10 @@
 
 .edades-head h4 {
   font-size: 1.6rem;
-  color: #ff8c00;
+  color: var(--halloween-vivid);
   letter-spacing: 3px;
   margin-bottom: 0.4rem;
-  text-shadow: 0 0 14px rgba(255, 140, 0, 0.3);
+  text-shadow: 0 0 14px rgba(255, 157, 46, 0.3);
 }
 
 .edades-head .season-subtitle {
@@ -260,12 +312,12 @@
 
 .halloween-landing-title {
   font-size: clamp(1.6rem, 4vw, 3.2rem);
-  color: var(--ghostly-white);
+  color: #FFFFFF;
   line-height: 1.25;
   letter-spacing: 2px;
   text-transform: uppercase;
   max-width: 900px;
-  text-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 140, 0, 0.25);
+  text-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 157, 46, 0.3);
 }
 
 .halloween-landing-title span {
@@ -273,7 +325,7 @@
 }
 
 .halloween-landing-sub {
-  color: #ff8c00;
+  color: var(--halloween-vivid);
   font-size: 1.1rem;
   letter-spacing: 6px;
   font-weight: 700;
@@ -316,7 +368,7 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 3px;
-  color: var(--season-accent);
+  color: var(--halloween-vivid);
   border: 1px solid var(--season-accent);
   border-radius: 40px;
   background: var(--glass-bg);
@@ -332,26 +384,29 @@
 }
 
 /* PESTAÑAS · COLOR DISTINTO POR TEMPORADA */#temporadas .season-tab[data-month="enero"]:not(.is-active) {
-  background: linear-gradient(135deg, #9fc6e2, #cfe5f3);
-  color: #1d3a5c;
-  border-color: #b8892d;
+  background: linear-gradient(135deg, #1A3A6B, #2A5298);
+  color: #FFD700;
+  border-color: rgba(255, 215, 0, 0.5);
   font-weight: 700;
 }
 
 #temporadas .season-tab[data-month="enero"]:not(.is-active) .tab-label {
-  color: #2c4a6e;
+  color: #FFD700;
+  font-weight: 700;
 }
 
 #temporadas[data-season="enero"] .season-tab.is-active {
-  background: linear-gradient(135deg, #8fbee0, #b9d8ee);
-  color: #16324f;
-  border-color: #b8892d;
+  background: linear-gradient(135deg, #0D2440, #1A3A6B);
+  color: #FFD700;
+  border-color: #FFD700;
   text-shadow: none;
-  box-shadow: 0 0 35px rgba(184, 137, 45, 0.4);
+  box-shadow: 0 0 45px rgba(255, 215, 0, 0.5);
+  font-weight: 700;
 }
 
 #temporadas[data-season="enero"] .season-tab.is-active .tab-label {
-  color: #16324f;
+  color: #FFD700;
+  font-weight: 700;
 }
 
 #temporadas .season-tab[data-month="febrero"]:not(.is-active) {
@@ -470,46 +525,349 @@
 #temporadas[data-season="enero"] .season-item,
 #temporadas[data-season="enero"] .season-nav-card,
 #temporadas[data-season="enero"] .subsection-img {
-  border-color: #b8892d;
+  border-color: rgba(255, 215, 0, 0.45);
 }
 
-#temporadas[data-season="enero"] .season-item,
-#temporadas[data-season="enero"] .season-nav-card,
-#temporadas[data-season="enero"] .season-subsection,
-#temporadas[data-season="enero"] .season-hero {
-  border-width: 1.5px;
-}
-
-#temporadas[data-season="enero"] .season-hero,
 #temporadas[data-season="enero"] .season-item,
 #temporadas[data-season="enero"] .season-nav-card,
 #temporadas[data-season="enero"] .season-subsection {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.25));
+  border-width: 1.5px;
+}
+
+#temporadas[data-season="enero"] .season-item,
+#temporadas[data-season="enero"] .season-nav-card,
+#temporadas[data-season="enero"] .season-subsection {
+  background: linear-gradient(145deg, rgba(13, 36, 64, 0.6), rgba(26, 58, 107, 0.4));
 }
 
 #temporadas[data-season="enero"] .season-item:hover,
 #temporadas[data-season="enero"] .season-subsection:hover {
-  box-shadow: 0 10px 30px rgba(29, 58, 92, 0.18), 0 0 25px rgba(184, 137, 45, 0.2);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25), 0 0 30px rgba(255, 215, 0, 0.2);
+  border-color: rgba(255, 215, 0, 0.6);
+}
+
+#temporadas[data-season="enero"] .enero-hero-wrapper {
+  display: flex;
+  gap: 1.5rem;
+  align-items: stretch;
+  margin-bottom: 1.8rem;
+}
+
+#temporadas[data-season="enero"] .enero-hero-wrapper .season-hero {
+  flex: 1.2;
+  margin-bottom: 0;
+  padding: 2.5rem 3rem;
+  text-align: left;
+  align-items: flex-start;
+}
+
+#temporadas[data-season="enero"] .enero-hero-photo {
+  position: relative;
+  width: 380px;
+  height: 380px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 3px solid rgba(255, 215, 0, 0.5);
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.35), 0 0 30px rgba(255, 215, 0, 0.15);
+}
+
+#temporadas[data-season="enero"] .enero-hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#temporadas[data-season="enero"] .enero-hero-photo .photo-change-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  z-index: 30;
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  color: #0D2440;
+  border: 3px solid #FFD700;
+  padding: 0.9rem 1.3rem;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5), 0 0 20px rgba(255, 215, 0, 0.3);
+  transition: var(--transition-premium);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  line-height: 1.3;
+  text-align: center;
+}
+
+#temporadas[data-season="enero"] .enero-hero-photo .photo-change-btn:hover {
+  background: linear-gradient(135deg, #FFE44D, #FFD700);
+  transform: scale(1.08);
+  box-shadow: 0 10px 35px rgba(255, 215, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.4);
 }
 
 #temporadas[data-season="enero"] .season-hero {
+  padding: 3rem 4rem;
+  border: 2px solid rgba(255, 215, 0, 0.35);
+  border-left: 5px solid #FFD700;
+  background: linear-gradient(145deg, rgba(13, 36, 64, 0.92), rgba(26, 58, 107, 0.8));
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 215, 0, 0.15);
   transition: var(--transition-premium);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+#temporadas[data-season="enero"] .enero-hero-full .season-milestone {
+  margin-bottom: 1rem;
+}
+
+#temporadas[data-season="enero"] .enero-hero-full .season-title {
+  margin-bottom: 0.8rem;
+}
+
+#temporadas[data-season="enero"] .enero-hero-full .season-subtitle {
+  margin-bottom: 1.3rem;
+  max-width: 750px;
+}
+
+#temporadas[data-season="enero"] .enero-hero-full .season-cta {
+  margin-bottom: 1.5rem;
+}
+
+#temporadas[data-season="enero"] .enero-quick-nav {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.3);
+  width: 100%;
+}
+
+#temporadas[data-season="enero"] .enero-quick-nav a {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
+  color: #FFD700;
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  padding: 0.65rem 1.8rem;
+  border-radius: 30px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: var(--transition-premium);
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.15);
+}
+
+#temporadas[data-season="enero"] .enero-quick-nav a:hover {
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  color: #0D2440;
+  border-color: #FFD700;
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px) scale(1.03);
+}
+
+#temporadas[data-season="enero"] .enero-hero-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 #temporadas[data-season="enero"] .season-hero:hover {
-  transform: translateY(-5px) scale(1.02);
-  border-color: #b8892d;
-  border-width: 2px;
-  box-shadow: 0 22px 50px rgba(29, 58, 92, 0.22), 0 0 45px rgba(184, 137, 45, 0.4);
+  transform: translateY(-3px) scale(1.01);
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 20px 55px rgba(0, 0, 0, 0.35), 0 0 45px rgba(255, 215, 0, 0.2);
 }
 
 #temporadas[data-season="enero"] .season-milestone {
-  font-size: 0.9rem;
-  color: #8a6a20;
-  border-color: #b8892d;
-  border-width: 1.5px;
-  letter-spacing: 5px;
-  box-shadow: 0 0 18px rgba(184, 137, 45, 0.35);
+  font-size: 0.65rem;
+  color: #FFD700;
+  border: 2px solid rgba(255, 215, 0, 0.5);
+  padding: 0.5rem 1.4rem;
+  letter-spacing: 4px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  font-weight: 700;
+  background: rgba(255, 215, 0, 0.08);
+  margin-bottom: 1rem;
+}
+
+#temporadas[data-season="enero"] .season-title {
+  color: #FFFFFF;
+  font-size: 2.3rem;
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.35);
+  letter-spacing: 2px;
+  line-height: 1.3;
+  margin-bottom: 0.8rem;
+}
+
+#temporadas[data-season="enero"] .season-subtitle {
+  color: #E8DCC8;
+  font-size: 0.95rem;
+  line-height: 1.8;
+  font-weight: 500;
+  margin-bottom: 1.2rem;
+}
+
+#temporadas[data-season="enero"] .season-subtitle strong {
+  color: #FFD700;
+  font-weight: 800;
+}
+
+#temporadas[data-season="enero"] .season-cta {
+  background: linear-gradient(135deg, #FFD700, #DAA520);
+  color: #0D2440;
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 3px;
+  box-shadow: 0 10px 35px rgba(255, 215, 0, 0.45), 0 0 0 3px rgba(255, 215, 0, 0.3), 0 0 60px rgba(255, 215, 0, 0.15);
+  align-self: flex-start;
+}
+
+#temporadas[data-season="enero"] .season-cta:hover {
+  background: linear-gradient(135deg, #FFE44D, #FFD700);
+  color: #0D2440;
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.55), 0 0 0 4px rgba(255, 215, 0, 0.4), 0 0 70px rgba(255, 215, 0, 0.25);
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.1);
+}
+
+/* ENERO: grid, cards y subsecciones compactos */
+#temporadas[data-season="enero"] .season-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  margin-top: 0;
+}
+
+#temporadas[data-season="enero"] .season-item {
+  display: flex !important;
+  flex-direction: row !important;
+  grid-template-columns: none !important;
+  padding: 0;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(13, 36, 64, 0.85), rgba(26, 58, 107, 0.65));
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  transition: var(--transition-premium);
+  gap: 0;
+  text-decoration: none;
+  min-height: 160px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+#temporadas[data-season="enero"] .season-item:hover {
+  border-color: rgba(255, 215, 0, 0.9);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 35px rgba(255, 215, 0, 0.3);
+  transform: translateY(-5px);
+}
+
+#temporadas[data-season="enero"] .season-item img {
+  width: 160px !important;
+  height: 160px !important;
+  object-fit: cover;
+  display: block;
+  flex-shrink: 0;
+}
+
+#temporadas[data-season="enero"] .season-item-body {
+  padding: 1.5rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+#temporadas[data-season="enero"] .season-item-body h4 {
+  color: #FFD700;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+#temporadas[data-season="enero"] .season-item-body p {
+  color: #CBD5E1;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+#temporadas[data-season="enero"] .season-item .expand-icon {
+  display: none;
+}
+
+#temporadas[data-season="enero"] .season-sub-sections {
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+#temporadas[data-season="enero"] .season-subsection {
+  padding: 1.5rem;
+  gap: 1.8rem;
+}
+
+#temporadas[data-season="enero"] .season-subsection .subsection-img {
+  width: 220px;
+  height: 160px;
+  border-radius: 12px;
+}
+
+#temporadas[data-season="enero"] .season-subsection .subsection-img img {
+  border-radius: 12px;
+}
+
+#temporadas[data-season="enero"] .season-subsection .subsection-body h4 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+#temporadas[data-season="enero"] .season-subsection .subsection-body p {
+  font-size: 0.88rem;
+  line-height: 1.7;
+  margin-bottom: 0.6rem;
+}
+
+#temporadas[data-season="enero"] .subsection-list {
+  gap: 0.3rem;
+}
+
+#temporadas[data-season="enero"] .subsection-list li {
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+}
+
+#temporadas[data-season="enero"] .season-subsection .season-cta {
+  margin-top: 0.5rem;
+  padding: 0.8rem 2rem;
+  font-size: 0.72rem;
+}
+
+#temporadas[data-season="enero"] .season-quick-nav {
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  #temporadas[data-season="enero"] .season-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  #temporadas[data-season="enero"] .season-item {
+    flex-direction: row;
+  }
+  #temporadas[data-season="enero"] .season-item img {
+    width: 110px;
+    height: 100px;
+    flex-shrink: 0;
+  }
 }
 
 #temporadas[data-season="febrero"] {
@@ -1239,10 +1597,11 @@
 
 .season-range {
   margin-top: 1.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: 5px;
-  color: var(--ashen-grey);
+  color: #1A3A6B;
+  font-weight: 700;
 }
 
 /* TABS */
@@ -1257,7 +1616,7 @@
 .season-tab {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   padding: 1.4rem 2.8rem;
   font-family: 'Cinzel Decorative', cursive;
   font-size: 1.15rem;
@@ -1268,6 +1627,7 @@
   transition: var(--transition-premium);
   position: relative;
   overflow: hidden;
+  font-weight: 700;
 }
 
 .season-tab .tab-label {
@@ -1275,9 +1635,9 @@
   font-family: 'Quicksand', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 2px;
-  font-weight: 400;
+  font-weight: 600;
   text-transform: uppercase;
-  opacity: 0.7;
+  opacity: 0.85;
   margin-top: 0.5rem;
 }
 
@@ -1297,14 +1657,14 @@
 
 /* OCTUBRE · PESTAÑA EXCLUSIVA DE HALLOWEEN */
 .season-tab-exclusive {
-  background: linear-gradient(135deg, rgba(255, 140, 0, 0.14), rgba(218, 0, 0, 0.08));
-  border-color: rgba(255, 140, 0, 0.5);
-  color: #ff8c00;
+  background: linear-gradient(135deg, rgba(255, 157, 46, 0.14), rgba(229, 32, 32, 0.08));
+  border-color: rgba(255, 157, 46, 0.5);
+  color: var(--halloween-vivid);
   animation: exclusivePulse 2.5s ease-in-out infinite;
 }
 
 .season-tab-exclusive .tab-label {
-  color: #ffb84d;
+  color: var(--halloween-vivid);
   font-weight: 700;
   opacity: 1;
 }
@@ -1417,7 +1777,7 @@ a.season-item:hover {
 
 .season-subsection h4 {
   font-size: 1.6rem;
-  color: var(--season-accent);
+  color: var(--halloween-vivid);
   letter-spacing: 3px;
   margin-bottom: 1rem;
   text-shadow: 0 0 14px var(--season-glow);
@@ -1426,9 +1786,10 @@ a.season-item:hover {
 .season-subsection p {
   font-size: 1rem;
   line-height: 1.9;
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   margin-bottom: 1.8rem;
   max-width: 60ch;
+  font-weight: 500;
 }
 
 .subsection-list {
@@ -1442,9 +1803,10 @@ a.season-item:hover {
 .subsection-list li {
   position: relative;
   padding-left: 1.9rem;
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 0.98rem;
   line-height: 1.65;
+  font-weight: 500;
 }
 
 .subsection-list li::before {
@@ -1458,7 +1820,8 @@ a.season-item:hover {
 }
 
 .subsection-list li strong {
-  color: var(--ghostly-white);
+  color: var(--halloween-vivid);
+  font-weight: 700;
 }
 
 .season-subsection .season-cta {
@@ -1535,8 +1898,8 @@ a.season-item:hover {
   font-size: 1.2rem;
   text-transform: uppercase;
   letter-spacing: 10px;
-  color: var(--ashen-grey);
-  opacity: 0.45;
+  color: var(--halloween-vivid);
+  opacity: 0.7;
 }
 
 @keyframes seasonIn {
@@ -1565,7 +1928,7 @@ a.season-item:hover {
   font-size: 0.62rem;
   letter-spacing: 4px;
   text-transform: uppercase;
-  color: var(--season-accent);
+  color: var(--halloween-vivid);
   border: 1px solid var(--season-accent);
   padding: 0.5rem 1.2rem;
   border-radius: 40px;
@@ -1586,16 +1949,18 @@ a.season-item:hover {
 .season-title {
   font-size: 2.6rem;
   line-height: 1.3;
-  color: var(--ghostly-white);
+  color: #FFFFFF;
   margin-bottom: 1.6rem;
   letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
 }
 
 .season-subtitle {
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 1.05rem;
   line-height: 2.1;
   margin-bottom: 2.8rem;
+  font-weight: 500;
 }
 
 .season-cta {
@@ -1672,8 +2037,9 @@ a.season-item:hover {
 
 .season-item-body p {
   font-size: 0.88rem;
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   line-height: 1.7;
+  font-weight: 500;
 }
 
 @media (max-width: 1024px) {

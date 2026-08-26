@@ -1,18 +1,23 @@
 :root {
   --pure-black: #050505;
   --soft-black: #0c0c0c;
-  --halloween-primary: #FF8C00;
-  --halloween-vivid: #FFA500;
-  --halloween-muted: #B8860B;
-  --ghostly-white: #F1F5F9;
-  --ashen-grey: #94A3B8;
+  --halloween-primary: #FF9D2E;
+  --halloween-vivid: #FFB347;
+  --halloween-muted: #C99A2E;
+  --ghostly-white: #F5F7FA;
+  --ashen-grey: #CBD5E1;
   /* Improved readability */
-  --blood-red: #DA0000;
-  --border-glow: rgba(255, 140, 0, 0.2);
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.07);
+  --blood-red: #E52020;
+  --border-glow: rgba(255, 157, 46, 0.25);
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.10);
   --transition-premium: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
   --transition-haunted: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+  /* Season defaults */
+  --season-accent: #FFB347;
+  --season-bg1: rgba(255, 157, 46, 0.15);
+  --season-bg2: rgba(255, 157, 46, 0.05);
+  --season-dark: #F5F7FA;
 }
 
 * {
@@ -31,6 +36,7 @@ body {
   color: var(--ashen-grey);
   line-height: 1.7;
   overflow-x: hidden;
+  font-weight: 500;
 }
 
 h1,
@@ -40,7 +46,7 @@ h4 {
   font-family: 'Cinzel Decorative', cursive;
   font-weight: 700;
   letter-spacing: 3px;
-  color: var(--halloween-primary);
+  color: var(--halloween-vivid);
   text-transform: uppercase;
 }
 

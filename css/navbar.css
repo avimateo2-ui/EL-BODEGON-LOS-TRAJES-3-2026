@@ -38,8 +38,8 @@ header.scrolled {
 
 header h1 {
   font-size: 1.5rem;
-  color: var(--halloween-primary);
-  text-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
+  color: var(--halloween-vivid);
+  text-shadow: 0 0 12px rgba(255, 179, 71, 0.4);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -53,17 +53,18 @@ nav ul {
 
 nav a {
   text-decoration: none;
-  color: var(--ashen-grey);
+  color: var(--ghostly-white);
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 2.5px;
   transition: var(--transition-haunted);
   position: relative;
+  font-weight: 600;
 }
 
 nav a:hover {
-  color: var(--halloween-primary);
-  text-shadow: 0 0 15px var(--halloween-primary);
+  color: var(--halloween-vivid);
+  text-shadow: 0 0 18px var(--halloween-primary);
   transform: translateY(-2px);
 }
 
@@ -74,7 +75,7 @@ nav a::after {
   left: 0;
   width: 0;
   height: 2px;
-  background: var(--halloween-primary);
+  background: var(--halloween-vivid);
   transition: var(--transition-premium);
 }
 

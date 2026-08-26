@@ -71,20 +71,21 @@
 
 .hero-box h2 {
   font-size: 5.5rem;
-  color: var(--ghostly-white);
+  color: #FFFFFF;
   line-height: 1.1;
   margin-bottom: 2rem;
-  text-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 20px rgba(255, 140, 0, 0.2);
+  text-shadow: 0 0 50px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 157, 46, 0.3);
 }
 
 .hero-box p {
-  color: var(--halloween-primary);
-  font-size: 1.2rem;
-  letter-spacing: 7px;
-  font-weight: 700;
+  color: #FFD700;
+  font-size: 1.5rem;
+  letter-spacing: 8px;
+  font-weight: 800;
   margin-bottom: 3.5rem;
   text-transform: uppercase;
   animation: letterSpacing 2s ease-out;
+  text-shadow: 0 0 30px rgba(255, 215, 0, 0.6), 0 0 60px rgba(255, 215, 0, 0.3);
 }
 
 @keyframes letterSpacing {
@@ -102,8 +103,8 @@
 .btn-haunted {
   padding: 1.3rem 4rem;
   background: transparent;
-  color: var(--halloween-primary);
-  border: 2px solid var(--halloween-primary);
+  color: var(--halloween-vivid);
+  border: 2px solid var(--halloween-vivid);
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 700;
@@ -115,9 +116,9 @@
 }
 
 .btn-haunted:hover {
-  background: var(--halloween-primary);
+  background: var(--halloween-vivid);
   color: var(--pure-black);
-  box-shadow: 0 0 45px rgba(255, 140, 0, 0.5);
+  box-shadow: 0 0 50px rgba(255, 179, 71, 0.55);
   transform: translateY(-8px);
 }
 
