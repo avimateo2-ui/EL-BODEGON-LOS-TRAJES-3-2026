@@ -1,1 +1,1 @@
-window.ADMIN_CONTENT = {"version":2,"texts":[],"images":[],"addCards":[],"addTexts":[],"deleteCards":[],"deleteTexts":[],"seasonCovers":{},"photoSettings":{},"editorStyles":{"test_123":"position:relative;"}};
+window.ADMIN_CONTENT = {"version":2,"texts":[],"images":[],"addCards":[],"addTexts":[],"deleteCards":[],"deleteTexts":[],"seasonCovers":{},"photoSettings":{},"editorStyles":{"test_debug":"color:red;"}};
