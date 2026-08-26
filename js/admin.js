@@ -10,6 +10,7 @@
   var DEFAULT_USERNAME = 'Ana Avila';
   var SESSION_KEY = 'bodegon_admin_session';
   var AUTOSAVE_KEY = 'bodegon_autosave';
+  var PENDING_SYNC_KEY = 'bodegon_pending_sync';
   var CLOUD_SYNC_API = '/api/save-content';
   var cloudSyncTimer = null;
   var CLOUD_SYNC_DELAY = 2500;
@@ -1624,18 +1625,42 @@
     cloudSyncTimer = setTimeout(syncToCloud, CLOUD_SYNC_DELAY);
   }
 
-  function syncToCloud() {
+  function savePendingSync(data) {
+    try {
+      localStorage.setItem(PENDING_SYNC_KEY, data);
+    } catch (e) {}
+  }
+
+  function clearPendingSync() {
+    try {
+      localStorage.removeItem(PENDING_SYNC_KEY);
+    } catch (e) {}
+  }
+
+  function hasPendingSync() {
+    try {
+      return !!localStorage.getItem(PENDING_SYNC_KEY);
+    } catch (e) { return false; }
+  }
+
+  function syncToCloud(dataToSend) {
+    if (!navigator.onLine) {
+      if (dataToSend) savePendingSync(dataToSend);
+      showOfflineBadge();
+      return;
+    }
+
+    var data = dataToSend || serialize();
+
     var syncBadge = document.querySelector('.admin-cloud-sync');
     if (!syncBadge) {
       syncBadge = document.createElement('div');
       syncBadge.className = 'admin-ui admin-cloud-sync';
-      syncBadge.innerHTML = '<span class="admin-cloud-icon">☁</span> Sincronizando...';
       document.body.appendChild(syncBadge);
     }
+    syncBadge.innerHTML = '<span class="admin-cloud-icon">☁</span> Sincronizando...';
     syncBadge.classList.add('is-visible');
     syncBadge.classList.remove('is-error', 'is-ok');
-
-    var data = serialize();
 
     fetch(CLOUD_SYNC_API, {
       method: 'POST',
@@ -1648,6 +1673,7 @@
       .then(function (res) { return res.json().then(function (j) { return { ok: res.ok, json: j }; }); })
       .then(function (r) {
         if (r.ok && r.json.ok) {
+          clearPendingSync();
           syncBadge.innerHTML = '<span class="admin-cloud-icon">✓</span> Sincronizado con GitHub';
           syncBadge.classList.add('is-ok');
           cloudSyncRetries = 0;
@@ -1668,18 +1694,45 @@
           return;
         }
 
+        savePendingSync(data);
+
         if (cloudSyncRetries < MAX_RETRIES) {
           syncBadge.innerHTML = '<span class="admin-cloud-icon">⟳</span> Reintentando... (' + cloudSyncRetries + '/' + MAX_RETRIES + ')';
-          setTimeout(syncToCloud, 3000);
+          setTimeout(function () { syncToCloud(data); }, 3000);
         } else {
-          syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Sin conexión — guardado local';
-          syncBadge.classList.add('is-error');
+          showOfflineBadge();
           cloudSyncRetries = 0;
-          setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 5000);
         }
         console.warn('[cloud-sync]', errMsg);
       });
   }
+
+  function showOfflineBadge() {
+    var syncBadge = document.querySelector('.admin-cloud-sync');
+    if (!syncBadge) {
+      syncBadge = document.createElement('div');
+      syncBadge.className = 'admin-ui admin-cloud-sync';
+      document.body.appendChild(syncBadge);
+    }
+    syncBadge.innerHTML = '<span class="admin-cloud-icon">⚠</span> Sin conexión — guardado local. Se sincroniza al reconectar.';
+    syncBadge.classList.add('is-error');
+    syncBadge.classList.remove('is-ok');
+    setTimeout(function () { syncBadge.classList.remove('is-visible', 'is-error'); }, 6000);
+  }
+
+  function retryPendingSyncs() {
+    if (!navigator.onLine || !hasPendingSync()) return;
+    var pending = localStorage.getItem(PENDING_SYNC_KEY);
+    if (pending) {
+      toast('Conexión restaurada. Sincronizando...');
+      syncToCloud(pending);
+    }
+  }
+
+  window.addEventListener('online', retryPendingSyncs);
+  window.addEventListener('online', function () {
+    if (hasPendingSync()) toast('Conexión restaurada. Sincronizando pendientes...');
+  });
 
   function forceSyncNow() {
     cloudSyncRetries = 0;
@@ -2005,6 +2058,8 @@
       e.preventDefault();
       editImage(img);
     }, true);
+
+    setTimeout(retryPendingSyncs, 1000);
   }
 
   function mergeData(base, override) {
