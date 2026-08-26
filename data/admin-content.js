@@ -9,8 +9,10 @@ window.ADMIN_CONTENT = {
   "deleteCards": [],
   "deleteTexts": [],
   "seasonCovers": {},
-  "photoSettings": {},
-  "editorStyles": {
-    "e1787769276333_w636": "--d: 90ms; left: 0px; top: 0px;"
-  }
+  "photoSettings": {
+    "enero": {
+      "width": 529
+    }
+  },
+  "editorStyles": {}
 };
