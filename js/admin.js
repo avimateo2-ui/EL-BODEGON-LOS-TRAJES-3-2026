@@ -12,6 +12,7 @@
   var AUTOSAVE_KEY = 'bodegon_autosave';
   var PENDING_SYNC_KEY = 'bodegon_pending_sync';
   var CLOUD_SYNC_API = '/api/save-content';
+  var CLOUD_SYNC_FALLBACK = 'https://el-bodegon-los-trajes-3-2026.vercel.app/api/save-content';
   var cloudSyncTimer = null;
   var CLOUD_SYNC_DELAY = 2500;
   var cloudSyncRetries = 0;
@@ -1644,12 +1645,6 @@
   }
 
   function syncToCloud(dataToSend) {
-    if (!navigator.onLine) {
-      if (dataToSend) savePendingSync(dataToSend);
-      showOfflineBadge();
-      return;
-    }
-
     var data = dataToSend || serialize();
 
     var syncBadge = document.querySelector('.admin-cloud-sync');
@@ -1662,7 +1657,15 @@
     syncBadge.classList.add('is-visible');
     syncBadge.classList.remove('is-error', 'is-ok');
 
-    fetch(CLOUD_SYNC_API, {
+    var isLocal = window.location.protocol === 'file:' ||
+                  window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1' ||
+                  window.location.hostname === '';
+    var url = isLocal ? CLOUD_SYNC_FALLBACK : CLOUD_SYNC_API;
+
+    console.log('[cloud-sync] Enviando a:', url, '| online:', navigator.onLine);
+
+    fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -1721,10 +1724,10 @@
   }
 
   function retryPendingSyncs() {
-    if (!navigator.onLine || !hasPendingSync()) return;
+    if (!hasPendingSync()) return;
     var pending = localStorage.getItem(PENDING_SYNC_KEY);
     if (pending) {
-      toast('Conexión restaurada. Sincronizando...');
+      toast('Sincronizando cambios pendientes...');
       syncToCloud(pending);
     }
   }
