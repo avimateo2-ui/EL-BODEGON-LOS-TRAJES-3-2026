@@ -11,7 +11,7 @@ window.ADMIN_CONTENT = {
   "seasonCovers": {},
   "photoSettings": {
     "enero": {
-      "width": 529
+      "width": 441
     }
   },
   "editorStyles": {}
