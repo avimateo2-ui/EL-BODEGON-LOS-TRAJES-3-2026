@@ -56,6 +56,8 @@ module.exports = async (req, res) => {
       (parsed.deleteCards && parsed.deleteCards.length > 0) ||
       (parsed.deleteTexts && parsed.deleteTexts.length > 0) ||
       (parsed.seasonCovers && Object.keys(parsed.seasonCovers).length > 0) ||
+      (parsed.photoSettings && Object.keys(parsed.photoSettings).length > 0) ||
+      (parsed.editorStyles && Object.keys(parsed.editorStyles).length > 0) ||
       parsed.passwordHash ||
       parsed.usernameHash;
 

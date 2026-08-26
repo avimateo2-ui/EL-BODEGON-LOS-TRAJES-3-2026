@@ -968,8 +968,8 @@
     if (selectedEl) deselectElement();
     selectedEl = el;
     if (!el.dataset.origStyles) el.dataset.origStyles = el.style.cssText;
-    if (!el.dataset.editorStyle) {
-      el.dataset.editorStyle = el.tagName + (el.id ? '#' + el.id : '') + '.' + String(el.className || 'el').split(' ')[0] + '_' + Date.now();
+    if (!el.dataset.editorId) {
+      el.dataset.editorId = 'e' + Date.now() + '_' + Math.random().toString(36).substr(2, 4);
     }
     el.classList.add('editor-selected');
     var handle = document.getElementById('editor-handle');
@@ -1246,11 +1246,9 @@
   function applyEditorStyles() {
     var es = content.editorStyles || {};
     Object.keys(es).forEach(function (key) {
-      var sel = key.split('_')[0];
-      var el = document.querySelector(sel);
+      var el = document.querySelector('[data-editor-id="' + key + '"]');
       if (el && es[key]) {
         el.style.cssText = es[key];
-        el.dataset.editorStyle = key;
       }
     });
   }
@@ -1742,8 +1740,8 @@
 
   function serialize() {
     var editorStyles = {};
-    qa('[data-editor-style]').forEach(function (el) {
-      editorStyles[el.dataset.editorStyle] = el.style.cssText;
+    qa('[data-editor-id]').forEach(function (el) {
+      editorStyles[el.dataset.editorId] = el.style.cssText;
     });
     var out = {
       version: 2,
@@ -1834,6 +1832,8 @@
     if (obj.passwordHash) content.passwordHash = obj.passwordHash;
     if (obj.usernameHash) content.usernameHash = obj.usernameHash;
     content.seasonCovers = obj.seasonCovers || {};
+    content.photoSettings = obj.photoSettings || {};
+    content.editorStyles = obj.editorStyles || {};
     applyContent();
     applySeasonCovers();
   }
@@ -2016,6 +2016,8 @@
     if (override.deleteCards !== undefined) result.deleteCards = override.deleteCards;
     if (override.deleteTexts !== undefined) result.deleteTexts = override.deleteTexts;
     if (override.seasonCovers !== undefined) result.seasonCovers = override.seasonCovers;
+    if (override.photoSettings !== undefined) result.photoSettings = override.photoSettings;
+    if (override.editorStyles !== undefined) result.editorStyles = override.editorStyles;
     if (override.passwordHash) result.passwordHash = override.passwordHash;
     if (override.usernameHash) result.usernameHash = override.usernameHash;
     return result;
