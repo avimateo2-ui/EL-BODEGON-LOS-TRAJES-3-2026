@@ -2,7 +2,12 @@ window.ADMIN_CONTENT = {
   "version": 2,
   "usernameHash": null,
   "passwordHash": null,
-  "texts": [],
+  "texts": [
+    {
+      "sel": "#temporadas > div:nth-child(2) > button:nth-child(1) > span:nth-child(1)",
+      "html": "FELIZ AÑO ,REYES MAGOS, UNIFORMES"
+    }
+  ],
   "images": [
     {
       "sel": "#batas > div:nth-child(1) > img:nth-child(1)",
