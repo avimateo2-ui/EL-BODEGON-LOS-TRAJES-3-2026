@@ -6,6 +6,10 @@ window.ADMIN_CONTENT = {
     {
       "sel": "#temporadas > div:nth-child(2) > button:nth-child(1) > span:nth-child(1)",
       "html": "FELIZ AÑO ,REYES MAGOS, UNIFORMES"
+    },
+    {
+      "sel": "#temporadas > div:nth-child(2) > button:nth-child(11) > span:nth-child(1)",
+      "html": "BAILES, CLAUSURAS,  GRADOS "
     }
   ],
   "images": [
