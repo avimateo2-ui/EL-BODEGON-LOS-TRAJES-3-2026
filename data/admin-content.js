@@ -46,6 +46,6 @@ window.ADMIN_CONTENT = {
   },
   "editorStyles": {
     "e1787948762885_f8vm": "",
-    "e1787948823662_t6sx": "--d: 180ms; width: 1090px; height: 554px;"
+    "e1787948823662_t6sx": "--d: 180ms; width: 1145px; height: 582px;"
   }
 };
