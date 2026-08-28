@@ -44,5 +44,7 @@ window.ADMIN_CONTENT = {
       "height": 340
     }
   },
-  "editorStyles": {}
+  "editorStyles": {
+    "e1787948762885_f8vm": ""
+  }
 };
