@@ -44,13 +44,5 @@ window.ADMIN_CONTENT = {
       "height": 340
     }
   },
-  "editorStyles": {
-    "e1787948874222_9mrm": "width: 1667px; height: 3912px;",
-    "e1787948980806_rkzw": "",
-    "e1787948980046_60y0": "",
-    "e1787948762885_f8vm": "",
-    "e1787948938115_igpv": "",
-    "e1787948823662_t6sx": "--d: 180ms; width: 1125px; height: 571px;",
-    "e1787948886233_0e22": ""
-  }
+  "editorStyles": {}
 };
