@@ -28,8 +28,6 @@ window.ADMIN_CONTENT = {
   ],
   "addCards": [],
   "addTexts": [],
-  "addTitles": [],
-  "addPhotos": [],
   "deleteCards": [],
   "deleteTexts": [],
   "seasonCovers": {
